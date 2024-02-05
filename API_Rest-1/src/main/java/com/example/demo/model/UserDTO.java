@@ -26,6 +26,11 @@ public class UserDTO {
 		this.role = role;
 		this.token = token;
 	}
-	
+
+	public UserDTO(long id, String username) {
+		super();
+		this.id = id;
+		this.username = username;
+	}
 	
 }

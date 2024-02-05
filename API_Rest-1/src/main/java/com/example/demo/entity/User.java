@@ -21,4 +21,23 @@ public class User {
 	private String role;
 	private String token;
 	
+	public User() {
+		super();
+	}
+
+	public User(long id, String username, String password, boolean enabled, String role, String token) {
+		super();
+		this.id = id;
+		this.username = username;
+		this.password = password;
+		this.enabled = enabled;
+		this.role = role;
+		this.token = token;
+	}
+
+	public User(long id, String username) {
+		super();
+		this.id = id;
+		this.username = username;
+	}
 }
