@@ -174,7 +174,7 @@ public class BusinessController {
 
 				business.setName(businessModel.getName());
 				business.setAddress(businessModel.getAddress());
-				business.setEmail(businessModel.getUsername());
+				business.setUsername(businessModel.getUsername());
 				business.setPhone(businessModel.getPhone());
 
 				String projectDir = System.getProperty("user.dir");
@@ -341,7 +341,7 @@ public class BusinessController {
         String username = ((UserDetails) principal).getUsername();
 
         StudentModel student = studentService.getStudentByName(username);
-        String email = student.getEmail();
+        String email = student.getUsername();
         Business business = businessService.getIdByEmail(email);
         List<ProFamily> profesionalFamilies = proFamilyService.getAllNotEmpty();
         model.addAttribute("profesionalFamilies", profesionalFamilies);

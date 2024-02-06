@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.entity.User;
+import com.example.demo.model.UserDTO;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.UserService;
 
@@ -18,6 +19,11 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public User findUserByUsername(String username) {
 		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public User register(UserDTO user) {
 		return null;
 	}
 }

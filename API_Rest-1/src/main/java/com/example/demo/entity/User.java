@@ -12,12 +12,12 @@ public class User {
 
 	@Id
 	@GeneratedValue
-	private long id;
+	private int id;
 	@Column(name="username", unique=true, nullable=false)
 	private String username;
 	@Column(name="password", nullable=false)
 	private String password;
-	private boolean enabled;
+	private int enabled;
 	private String role;
 	private String token;
 	
@@ -25,7 +25,7 @@ public class User {
 		super();
 	}
 
-	public User(long id, String username, String password, boolean enabled, String role, String token) {
+	public User(int id, String username, String password, int enabled, String role, String token) {
 		super();
 		this.id = id;
 		this.username = username;
@@ -35,7 +35,7 @@ public class User {
 		this.token = token;
 	}
 
-	public User(long id, String username) {
+	public User(int id, String username) {
 		super();
 		this.id = id;
 		this.username = username;

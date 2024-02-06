@@ -105,7 +105,7 @@ public class StudentServiceImpl implements StudentService, UserDetailsService {
 		 Student student = studentRepository.findById(studentModel.getId());
 		 student.setName(studentModel.getName());
 		 student.setSurname(studentModel.getSurname());
-		 student.setEmail(studentModel.getEmail()); 
+		 student.setUsername(studentModel.getUsername()); 
 		 student.setProfesionalFamily(proFamilyRepository.findById(studentModel.getProfesionalFamily().getId())); 
 		 return studentRepository.save(student);
 	 }

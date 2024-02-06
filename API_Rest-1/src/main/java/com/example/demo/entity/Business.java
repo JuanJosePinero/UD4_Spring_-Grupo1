@@ -68,17 +68,7 @@ public class Business extends User{
 		this.deleted = deleted;
 	}
 	
-	public Business(int id, String name, String address, String phone, String username, String logo,
-			List<Servicio> servicioList, int deleted) {
-		super(id, username);
-		this.name = name;
-		this.address = address;
-		this.phone = phone;
-		this.logo = logo;
-		this.servicioList = servicioList;
-		this.deleted = deleted;
-		
-	}
+	
 
 	public Business() {
 		super();
@@ -88,6 +78,27 @@ public class Business extends User{
 	public String toString() {
 		return "Business [name=" + name + ", address=" + address + ", phone=" + phone + ", logo=" + logo + ", deleted="
 				+ deleted + "id: "+getId()+"]";
+	}
+
+	public Business(int id, String username, String password, int enabled, String role, String token, String name,
+			String address, String phone, String logo, List<Servicio> servicioList, int deleted) {
+		super(id, username, password, enabled, role, token);
+		this.name = name;
+		this.address = address;
+		this.phone = phone;
+		this.logo = logo;
+		this.servicioList = servicioList;
+		this.deleted = deleted;
+	}
+
+	public Business(String name, String address, String phone, String logo, List<Servicio> servicioList, int deleted) {
+		super();
+		this.name = name;
+		this.address = address;
+		this.phone = phone;
+		this.logo = logo;
+		this.servicioList = servicioList;
+		this.deleted = deleted;
 	}
 	
 	
