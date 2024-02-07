@@ -82,33 +82,33 @@ public class StudentServiceImpl implements StudentService, UserDetailsService {
 		return new BCryptPasswordEncoder();
 	}
 
-	@Override
-	public List<Student> listAllStudents() {
-	    List<Student> students = new ArrayList<>();
-	    for (Student s : studentRepository.findAll()) {
-	        students.add(s);
-	    }
-	    return students;
-	}
-
-
-	@Override
-	public int deleteStudent(int id) {
-		Student student = studentRepository.findById(id);
-    	student.setDeleted(1);
-    	studentRepository.save(student);
-    	return 1;
-    }
-
-	@Override
-	public Student updateStudent(StudentModel studentModel) {
-		 Student student = studentRepository.findById(studentModel.getId());
-		 student.setName(studentModel.getName());
-		 student.setSurname(studentModel.getSurname());
-		 student.setUsername(studentModel.getUsername()); 
-		 student.setProfesionalFamily(proFamilyRepository.findById(studentModel.getProfesionalFamily().getId())); 
-		 return studentRepository.save(student);
-	 }
+//	@Override
+//	public List<Student> listAllStudents() {
+//	    List<Student> students = new ArrayList<>();
+//	    for (Student s : studentRepository.findAll()) {
+//	        students.add(s);
+//	    }
+//	    return students;
+//	}
+//
+//
+//	@Override
+//	public int deleteStudent(int id) {
+//		Student student = studentRepository.findById(id);
+//    	student.setDeleted(1);
+//    	studentRepository.save(student);
+//    	return 1;
+//    }
+//
+//	@Override
+//	public Student updateStudent(StudentModel studentModel) {
+//		 Student student = studentRepository.findById(studentModel.getId());
+//		 student.setName(studentModel.getName());
+//		 student.setSurname(studentModel.getSurname());
+//		 student.setUsername(studentModel.getUsername()); 
+//		 student.setProfesionalFamily(proFamilyRepository.findById(studentModel.getProfesionalFamily().getId())); 
+//		 return studentRepository.save(student);
+//	 }
 
 	@Override
 	public boolean login(String email, String password) {
@@ -165,44 +165,48 @@ public class StudentServiceImpl implements StudentService, UserDetailsService {
 		return entity2model(student);
 	}
 
-	@Override
-	public int enableStudent(int studentId) {
-	    Student student = studentRepository.findById(studentId);
-	        student.setEnabled(student.getEnabled() == 0 ? 1 : 0);
-	        studentRepository.save(student);
-	        return student.getEnabled();
-	}
-
-
-	@Override
-	public List<StudentModel> listAllEnabledOrDisabledStudents() {
-		List<Student> allStudents = studentRepository.findAllByEnabledIn(Arrays.asList(0, 1));
-	    List<StudentModel> studentModels = allStudents.stream()
-	            .map(this::entity2model)
-	            .collect(Collectors.toList());
-	    return studentModels;
-	}
-
-	@Override
-	public boolean mailExists(String mail) {
-		List<Student> students = new ArrayList<>();
-		for (Student student : students) {
-			if(student.getUsername() == mail)
-				return true;
-		}
-		return false;
-	}
-
-	@Override
-	public boolean isMailValid(String mail) {
-		String mailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
-		return mail.matches(mailRegex);
-	}
-	@Override
-	public StudentModel getStudentByName(String name) {
-		Student student=studentRepository.findByName(name);
-		return entity2model(student);
-	}
+//	@Override
+//	public int enableStudent(int studentId) {
+//	    Student student = studentRepository.findById(studentId);
+//	        student.setEnabled(student.getEnabled() == 0 ? 1 : 0);
+//	        studentRepository.save(student);
+//	        return student.getEnabled();
+//	}
+//
+//
+//	@Override
+//	public List<StudentModel> listAllEnabledOrDisabledStudents() {
+//		List<Student> allStudents = studentRepository.findAllByEnabledIn(Arrays.asList(0, 1));
+//	    List<StudentModel> studentModels = allStudents.stream()
+//	            .map(this::entity2model)
+//	            .collect(Collectors.toList());
+//	    return studentModels;
+//	}
+//
+//	@Override
+//	public boolean mailExists(String mail) {
+//		List<Student> students = new ArrayList<>();
+//		for (Student student : students) {
+//			if(student.getUsername() == mail)
+//				return true;
+//		}
+//		return false;
+//	}
+//
+//	@Override
+//	public boolean isMailValid(String mail) {
+//		String mailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
+//		return mail.matches(mailRegex);
+//	}
+//	@Override
+//	public StudentModel getStudentByName(String name) {
+//		Student student=studentRepository.findByName(name);
+//		return entity2model(student);
+//	}
+	
+	
+//--------------------------------------------------------------------------------------------------------------------------------------------------------
+//	Alumnos: recuperan todos los servicios correspondientes a su familia profesional.
 	@Override
 	public List<ServicioModel> getServiceByStudentProfesionalFamily(int id) {
 		Student student=studentRepository.findById(id);
@@ -213,141 +217,173 @@ public class StudentServiceImpl implements StudentService, UserDetailsService {
 		}
 		return servicioLista;
 	}
+//--------------------------------------------------------------------------------------------------------------------------------------------------------
+	
+//--------------------------------------------------------------------------------------------------------------------------------------------------------
+//	Alumnos: recuperan todos los servicios correspondientes a su familia profesional, que tiene asignados
 	@Override
-	public StudentModel getStudentByEmail(String email) {
-		return entity2model(studentRepository.findByEmail(email));
-	}
-	@Override
-	public List<Student> getStudentsOrderedByValorationAsc() {  
-        List<Student> students = studentRepository.findAll();
-        List<Student> studentsWithRatedServices = new ArrayList<>();
-        for (Student student : students) {
-        	if(!student.getServicios().isEmpty())
-        		studentsWithRatedServices.add(student);	
+	public List<ServicioModel> getAsignedServiceByStudentProfesionalFamily(int id) {
+		Student student=studentRepository.findById(id);
+		List<ServicioModel>servicioLista=new ArrayList<>();
+		List<Servicio>services=servicioRepository.findByProfesionalFamilyId(student.getProfesionalFamily());
+		for(Servicio servicio: services) {
+			servicioLista.add(servicioService.entity2model(servicio));
 		}
-        studentsWithRatedServices.sort(Comparator.comparingDouble(this::calculateAverageRating).reversed());
-        return studentsWithRatedServices;
-    }
+		return servicioLista;
+	}
+//--------------------------------------------------------------------------------------------------------------------------------------------------------
 	
+//--------------------------------------------------------------------------------------------------------------------------------------------------------
+//	Alumnos: recuperan todos los servicios correspondientes a su familia profesional, que no tienen asignados ningún alumno
 	@Override
-	public List<Student> getStudentsOrderedByValorationDesc() {  
-        List<Student> students = studentRepository.findAll();
-        List<Student> studentsWithRatedServices = new ArrayList<>();
-        for (Student student : students) {
-        	if(!student.getServicios().isEmpty())
-        		studentsWithRatedServices.add(student);	
+	public List<ServicioModel> getUnassignedServiceByStudentProfesionalFamily(int id) {
+		Student student=studentRepository.findById(id);
+		List<ServicioModel>servicioLista=new ArrayList<>();
+		List<Servicio>services=servicioRepository.findByProfesionalFamilyId(student.getProfesionalFamily());
+		for(Servicio servicio: services) {
+			servicioLista.add(servicioService.entity2model(servicio));
 		}
-        studentsWithRatedServices.sort(Comparator.comparingDouble(this::calculateAverageRating));
-        return studentsWithRatedServices;
-    }
-
-	private double calculateAverageRating(Student student) {
-	    List<Servicio> studentServices = student.getServicios();
-	    if (studentServices == null || studentServices.isEmpty()) {
-	        return -1; 
-	    }
-	    double suma = 0;
-	    for (Servicio servicio : studentServices) {
-	        suma += servicio.getValoration();
-	    }
-	    return suma / studentServices.size(); 
+		return servicioLista;
 	}
+//--------------------------------------------------------------------------------------------------------------------------------------------------------
 
-    
-    @Override
-    public List<Student>getStudentsOrderedByServiceAmount(){
-    	List<Student> students = studentRepository.findAll();
-        List<Student> studentsWithServices = new ArrayList<>();
-        for (Student student : students) {
-        	if(!student.getServicios().isEmpty())
-        		studentsWithServices.add(student);	
-		}
-        studentsWithServices.sort(Comparator.comparingInt(this::getNumberOfServices).reversed());
-        return studentsWithServices;
-    	
-    }
-    
-    private int getNumberOfServices(Student student) {
-    	List<Servicio> studentServices = student.getServicios();
-    	return studentServices.size();
-    }	
-    
-    
-    @Override
-    public List<Student> getAdminScreenFilterBy(String filterBy, String opcion) {
-        List<Student> students = new ArrayList<>();
-
-        if (!opcion.equalsIgnoreCase("null")) {
-            if ("MorePositiveValorations".equals(opcion)) {
-                students = getStudentsOrderedByValorationAsc();
-            } else if ("LessPositiveValorations".equals(opcion)) {
-                students = getStudentsOrderedByValorationDesc();
-            } else if ("NumberOfServices".equals(opcion)) {
-                students = getStudentsOrderedByServiceAmount();
-            } else {
-                students = studentRepository.findAll();
-            }
-        } else {
-        	  students = studentRepository.findAll();
-        }
-
-        if (!filterBy.equalsIgnoreCase("null")) {
-            students = students.stream()
-                    .filter(student -> student.getProfesionalFamily() != null &&
-                            student.getProfesionalFamily().getId() == Integer.parseInt(filterBy))
-                    .collect(Collectors.toList());
-        }
-
-        return students;
-    }
-    
-	@Override
-	public List<Student> getStudentsByProFamily(int proFamilyId) {
-    	ProFamily proFam = proFamilyRepository.findById(proFamilyId);
-    	System.out.println("Familia profesional "+proFam);
-		List<Student> students = studentRepository.findByProfesionalFamily(proFam);
-		return students;
-	}
-	
-	@Override
-	public Map<Integer, Integer> getNumberOfFinishedServices(List<Student> studentList) {
-	    Map<Integer, Integer> numberOfFinishedServices = new HashMap<>();
-
-	    for (Student student : studentList) {
-	        List<Servicio> studentServices = student.getServicios();
-	        int numFinishedService = 0;
-
-	        for (Servicio servicio : studentServices) {
-	            if (servicio.getFinished() == 1) {
-	                numFinishedService++;
-	            }
-	        }
-
-	        numberOfFinishedServices.put(studentRepository.findByName(student.getName()).getId() , numFinishedService);
-	    }
-
-	    return numberOfFinishedServices;
-	}
-	
-	@Override
-	public Map<Integer, Double> getAverageValoration(List<Student> studentList) {
-	    Map<Integer, Double> averageValorations = new HashMap<>();
-
-	    for (Student student : studentList) {
-	        List<Servicio> studentServices = student.getServicios();
-
-	        Double avgRating = calculateAverageRating(student);
-
-	        averageValorations.put(studentRepository.findByName(student.getName()).getId() , avgRating);
-	    }
-
-	    return averageValorations;
-	}
 	
 	
-
-
-    
+	
+//	@Override
+//	public List<Student> getStudentsByProFamily(int proFamilyId) {
+//    	ProFamily proFam = proFamilyRepository.findById(proFamilyId);
+//    	System.out.println("Familia profesional "+proFam);
+//		List<Student> students = studentRepository.findByProfesionalFamily(proFam);
+//		return students;
+//	}
+//	
+//	@Override
+//	public StudentModel getStudentByEmail(String email) {
+//		return entity2model(studentRepository.findByEmail(email));
+//	}
+//	@Override
+//	public List<Student> getStudentsOrderedByValorationAsc() {  
+//        List<Student> students = studentRepository.findAll();
+//        List<Student> studentsWithRatedServices = new ArrayList<>();
+//        for (Student student : students) {
+//        	if(!student.getServicios().isEmpty())
+//        		studentsWithRatedServices.add(student);	
+//		}
+//        studentsWithRatedServices.sort(Comparator.comparingDouble(this::calculateAverageRating).reversed());
+//        return studentsWithRatedServices;
+//    }
+//	
+//	@Override
+//	public List<Student> getStudentsOrderedByValorationDesc() {  
+//        List<Student> students = studentRepository.findAll();
+//        List<Student> studentsWithRatedServices = new ArrayList<>();
+//        for (Student student : students) {
+//        	if(!student.getServicios().isEmpty())
+//        		studentsWithRatedServices.add(student);	
+//		}
+//        studentsWithRatedServices.sort(Comparator.comparingDouble(this::calculateAverageRating));
+//        return studentsWithRatedServices;
+//    }
+//
+//	private double calculateAverageRating(Student student) {
+//	    List<Servicio> studentServices = student.getServicios();
+//	    if (studentServices == null || studentServices.isEmpty()) {
+//	        return -1; 
+//	    }
+//	    double suma = 0;
+//	    for (Servicio servicio : studentServices) {
+//	        suma += servicio.getValoration();
+//	    }
+//	    return suma / studentServices.size(); 
+//	}
+//
+//    
+//    @Override
+//    public List<Student>getStudentsOrderedByServiceAmount(){
+//    	List<Student> students = studentRepository.findAll();
+//        List<Student> studentsWithServices = new ArrayList<>();
+//        for (Student student : students) {
+//        	if(!student.getServicios().isEmpty())
+//        		studentsWithServices.add(student);	
+//		}
+//        studentsWithServices.sort(Comparator.comparingInt(this::getNumberOfServices).reversed());
+//        return studentsWithServices;
+//    	
+//    }
+//    
+//    private int getNumberOfServices(Student student) {
+//    	List<Servicio> studentServices = student.getServicios();
+//    	return studentServices.size();
+//    }	
+//    
+//    
+//    @Override
+//    public List<Student> getAdminScreenFilterBy(String filterBy, String opcion) {
+//        List<Student> students = new ArrayList<>();
+//
+//        if (!opcion.equalsIgnoreCase("null")) {
+//            if ("MorePositiveValorations".equals(opcion)) {
+//                students = getStudentsOrderedByValorationAsc();
+//            } else if ("LessPositiveValorations".equals(opcion)) {
+//                students = getStudentsOrderedByValorationDesc();
+//            } else if ("NumberOfServices".equals(opcion)) {
+//                students = getStudentsOrderedByServiceAmount();
+//            } else {
+//                students = studentRepository.findAll();
+//            }
+//        } else {
+//        	  students = studentRepository.findAll();
+//        }
+//
+//        if (!filterBy.equalsIgnoreCase("null")) {
+//            students = students.stream()
+//                    .filter(student -> student.getProfesionalFamily() != null &&
+//                            student.getProfesionalFamily().getId() == Integer.parseInt(filterBy))
+//                    .collect(Collectors.toList());
+//        }
+//
+//        return students;
+//    }
+//    
+	
+	
+//	@Override
+//	public Map<Integer, Integer> getNumberOfFinishedServices(List<Student> studentList) {
+//	    Map<Integer, Integer> numberOfFinishedServices = new HashMap<>();
+//
+//	    for (Student student : studentList) {
+//	        List<Servicio> studentServices = student.getServicios();
+//	        int numFinishedService = 0;
+//
+//	        for (Servicio servicio : studentServices) {
+//	            if (servicio.getFinished() == 1) {
+//	                numFinishedService++;
+//	            }
+//	        }
+//
+//	        numberOfFinishedServices.put(studentRepository.findByName(student.getName()).getId() , numFinishedService);
+//	    }
+//
+//	    return numberOfFinishedServices;
+//	}
+	
+//	@Override
+//	public Map<Integer, Double> getAverageValoration(List<Student> studentList) {
+//	    Map<Integer, Double> averageValorations = new HashMap<>();
+//
+//	    for (Student student : studentList) {
+//	        List<Servicio> studentServices = student.getServicios();
+//
+//	        Double avgRating = calculateAverageRating(student);
+//
+//	        averageValorations.put(studentRepository.findByName(student.getName()).getId() , avgRating);
+//	    }
+//
+//	    return averageValorations;
+//	}
+//	
+//	
 }
 
 

@@ -10,50 +10,53 @@ import com.example.demo.model.StudentModel;
 
 public interface StudentService {
 
-	List<Student> listAllStudents();
-	
-	List<StudentModel> listAllEnabledOrDisabledStudents();
-	
+//	List<Student> listAllStudents();
+//	
+//	List<StudentModel> listAllEnabledOrDisabledStudents();
+//	
 	StudentModel getStudentById(int id);
-	
-	Student model2entity(StudentModel studentModel);
+//	
+//	Student model2entity(StudentModel studentModel);
 
 	public Student register(StudentModel studentModel);
 
 	public boolean login(String email, String password);
 
 	public boolean authenticate(String email, String password);
-
-	int deleteStudent(int id);
-
-	Student updateStudent(StudentModel studentModel);
-	
-	public int enableStudent(int studentId);
-	
-	public boolean mailExists(String mail);
-	
-	public boolean isMailValid(String mail);
+//
+//	int deleteStudent(int id);
+//
+//	Student updateStudent(StudentModel studentModel);
+//	
+//	public int enableStudent(int studentId);
+//	
+//	public boolean mailExists(String mail);
+//	
+//	public boolean isMailValid(String mail);
 	
 	public StudentModel entity2model(Student student);
 	
-	public StudentModel getStudentByName(String name);
+//	public StudentModel getStudentByName(String name);
 	
 	public List<ServicioModel> getServiceByStudentProfesionalFamily(int id);
 	
-	public StudentModel getStudentByEmail(String email);
+	public List<ServicioModel> getAsignedServiceByStudentProfesionalFamily(int id);
+	public List<ServicioModel> getUnassignedServiceByStudentProfesionalFamily(int id);
 	
-	public List<Student> getStudentsOrderedByValorationAsc();
+//	public StudentModel getStudentByEmail(String email);
 	
-	public List<Student> getStudentsOrderedByValorationDesc();
-	
-	public List<Student> getStudentsOrderedByServiceAmount();
-	
-	public List<Student> getStudentsByProFamily(int proFamilyId);
-
-	List<Student> getAdminScreenFilterBy(String opcion, String familiaProf);
-	
-	public Map<Integer, Integer> getNumberOfFinishedServices(List<Student> studentList);
-
-	Map<Integer, Double> getAverageValoration(List<Student> studentList); 
+//	public List<Student> getStudentsOrderedByValorationAsc();
+//	
+//	public List<Student> getStudentsOrderedByValorationDesc();
+//	
+//	public List<Student> getStudentsOrderedByServiceAmount();
+//	
+//	public List<Student> getStudentsByProFamily(int proFamilyId);
+//
+//	List<Student> getAdminScreenFilterBy(String opcion, String familiaProf);
+//	
+//	public Map<Integer, Integer> getNumberOfFinishedServices(List<Student> studentList);
+//
+//	Map<Integer, Double> getAverageValoration(List<Student> studentList); 
 
 }
