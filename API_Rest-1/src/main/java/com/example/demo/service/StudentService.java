@@ -10,15 +10,15 @@ import com.example.demo.model.StudentModel;
 
 public interface StudentService {
 
-//	List<Student> listAllStudents();
+	List<Student> listAllStudents();
 //	
 //	List<StudentModel> listAllEnabledOrDisabledStudents();
 //	
 	StudentModel getStudentById(int id);
 //	
-//	Student model2entity(StudentModel studentModel);
+	Student model2entity(StudentModel studentModel);
 
-	public Student register(StudentModel studentModel);
+	public Student register(Student studentModel);
 
 	public boolean login(String email, String password);
 
@@ -26,7 +26,7 @@ public interface StudentService {
 //
 //	int deleteStudent(int id);
 //
-//	Student updateStudent(StudentModel studentModel);
+	Student updateStudent(Student studentModel);
 //	
 //	public int enableStudent(int studentId);
 //	
@@ -36,7 +36,9 @@ public interface StudentService {
 	
 	public StudentModel entity2model(Student student);
 	
-//	public StudentModel getStudentByName(String name);
+	public StudentModel getStudentByName(String name);
+	
+	public Student getStudentByUsername(String username);
 	
 	public List<ServicioModel> getServiceByStudentProfesionalFamily(int id);
 	

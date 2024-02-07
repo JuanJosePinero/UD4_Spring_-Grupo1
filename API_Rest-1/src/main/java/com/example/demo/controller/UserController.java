@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.service.UserService;
+import com.example.demo.service.StudentService;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -25,7 +26,8 @@ import io.jsonwebtoken.SignatureAlgorithm;
 public class UserController {
 
 	@Autowired
-	private UserService userService;
+	@Qualifier("studentService")
+	private StudentService studentService;
 	
 	@Autowired
 	private AuthenticationManager authenticationManager;
@@ -43,15 +45,15 @@ public class UserController {
 		Authentication authentication = authenticationManager.authenticate(
 				new UsernamePasswordAuthenticationToken(username, pwd));
 		SecurityContextHolder.getContext().setAuthentication(authentication);
-		com.example.demo.entity.User usuario = userService.findUserByUsername(username);
+		com.example.demo.entity.User usuario = studentService.getStudentByUsername(username);
 		String token = getJWTToken(username);
 		usuario.setToken(token);
 		return usuario;
 	}
 	
 	@PostMapping("/register")
-	public com.example.demo.entity.User saveUser(@RequestBody com.example.demo.entity.User user){
-		return userService.register(user);
+	public com.example.demo.entity.Student saveUser(@RequestBody com.example.demo.entity.Student student){
+		return studentService.register(student);
 		
 	}
 	

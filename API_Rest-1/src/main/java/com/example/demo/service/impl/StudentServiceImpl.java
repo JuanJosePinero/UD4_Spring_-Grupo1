@@ -69,11 +69,11 @@ public class StudentServiceImpl implements StudentService, UserDetailsService {
 
 
 	@Override
-	public Student register(StudentModel studentModel) {
-		Student student = model2entity(studentModel);
+	public Student register(Student student) {
 		student.setPassword(passwordEncoder().encode(student.getPassword()));
 		student.setEnabled(0);
 		student.setRole("ROLE_STUDENT");
+		student.setToken(null);
 		return studentRepository.save(student);
 	}
 
@@ -81,15 +81,21 @@ public class StudentServiceImpl implements StudentService, UserDetailsService {
 	PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
+	
+	@Override
+	public StudentModel getStudentByName(String name) {
+		Student student=studentRepository.findByName(name);
+		return entity2model(student);
+	}
 
-//	@Override
-//	public List<Student> listAllStudents() {
-//	    List<Student> students = new ArrayList<>();
-//	    for (Student s : studentRepository.findAll()) {
-//	        students.add(s);
-//	    }
-//	    return students;
-//	}
+	@Override
+	public List<Student> listAllStudents() {
+	    List<Student> students = new ArrayList<>();
+	    for (Student s : studentRepository.findAll()) {
+	        students.add(s);
+	    }
+	    return students;
+	}
 //
 //
 //	@Override
@@ -100,19 +106,19 @@ public class StudentServiceImpl implements StudentService, UserDetailsService {
 //    	return 1;
 //    }
 //
-//	@Override
-//	public Student updateStudent(StudentModel studentModel) {
-//		 Student student = studentRepository.findById(studentModel.getId());
-//		 student.setName(studentModel.getName());
-//		 student.setSurname(studentModel.getSurname());
-//		 student.setUsername(studentModel.getUsername()); 
-//		 student.setProfesionalFamily(proFamilyRepository.findById(studentModel.getProfesionalFamily().getId())); 
-//		 return studentRepository.save(student);
-//	 }
+	@Override
+	public Student updateStudent(Student studentModel) {
+		 Student student = studentRepository.findById(studentModel.getId());
+		 student.setName(studentModel.getName());
+		 student.setSurname(studentModel.getSurname());
+		 student.setUsername(studentModel.getUsername()); 
+		 student.setProfesionalFamily(proFamilyRepository.findById(studentModel.getProfesionalFamily().getId())); 
+		 return studentRepository.save(student);
+	 }
 
 	@Override
 	public boolean login(String email, String password) {
-		Student student = studentRepository.findByEmail(email);
+		Student student = studentRepository.findByUsername(email);
 		return student != null && passwordEncoder().matches(password, student.getPassword());
 	}
 
@@ -123,7 +129,7 @@ public class StudentServiceImpl implements StudentService, UserDetailsService {
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		com.example.demo.entity.Student student = studentRepository.findByEmail(username);
+		com.example.demo.entity.Student student = studentRepository.findByUsername(username);
 		UserBuilder builder = null;
 		
 		if (student != null) {
@@ -146,7 +152,7 @@ public class StudentServiceImpl implements StudentService, UserDetailsService {
 	
 	
 	public UserDetails loadUserByEmail(String email) throws UsernameNotFoundException {
-		com.example.demo.entity.Student student = studentRepository.findByEmail(email);
+		com.example.demo.entity.Student student = studentRepository.findByUsername(email);
 		UserBuilder builder = null;
 
 		if (student != null) {
@@ -253,6 +259,11 @@ public class StudentServiceImpl implements StudentService, UserDetailsService {
 		return servicioLista;
 	}
 //--------------------------------------------------------------------------------------------------------------------------------------------------------
+	@Override
+	public Student getStudentByUsername(String username) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 	
 	

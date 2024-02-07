@@ -12,6 +12,6 @@ public interface BusinessRepository extends JpaRepository<Business, Serializable
 	
 	public abstract Business findByName(String name);
 	
-	public abstract Business findByEmail(String email);
+	public abstract Business findByUsername(String username);
 
 }

@@ -83,7 +83,7 @@ public class BusinessServiceImpl implements BusinessService {
 
         existingBusiness.setName(business.getName());
         existingBusiness.setAddress(business.getAddress());
-        existingBusiness.setEmail(business.getEmail());
+        existingBusiness.setUsername(business.getUsername());
         existingBusiness.setPhone(business.getPhone());
         existingBusiness.setLogo(business.getLogo());
 
@@ -95,7 +95,7 @@ public class BusinessServiceImpl implements BusinessService {
 	    Business business = model2entity(businessModel);
 	    business.setName(businessModel.getName());
 	    business.setAddress(businessModel.getAddress());
-	    business.setEmail(businessModel.getEmail());
+	    business.setUsername(businessModel.getUsername());
 	    business.setPhone(businessModel.getPhone());
 
 	    business.setLogo(businessModel.getLogo());
@@ -105,8 +105,8 @@ public class BusinessServiceImpl implements BusinessService {
 	}
 
 	@Override
-	public Business getIdByEmail(String email) {
-		Business business=businessRepository.findByEmail(email);
+	public Business getIdByUsername(String username) {
+		Business business=businessRepository.findByUsername(username);
 		return business;
 	}
 	

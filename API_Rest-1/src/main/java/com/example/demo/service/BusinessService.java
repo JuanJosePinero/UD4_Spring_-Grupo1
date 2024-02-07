@@ -31,7 +31,7 @@ public interface BusinessService {
 	
 	public Business model2entity(BusinessModel	businessModel);
 	
-	public Business getIdByEmail(String email);
+	public Business getIdByUsername(String username);
 
 	List<Business> getBusinessOrderedByServiceAmount();
 

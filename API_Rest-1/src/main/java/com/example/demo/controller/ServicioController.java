@@ -69,7 +69,7 @@ public class ServicioController {
 	    String username = ((UserDetails) principal).getUsername();
 	    StudentModel student = studentService.getStudentByName(username);
 	    String email = student.getUsername();	    
-	    Business business = businessService.getIdByEmail(email);
+	    Business business = businessService.getIdByUsername(email);
 	    servicioModel.setBusinessId(business);
 	    model.addAttribute("servicioModel", servicioModel);
 	    model.addAttribute("business", business);

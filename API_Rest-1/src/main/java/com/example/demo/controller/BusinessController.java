@@ -137,7 +137,7 @@ public class BusinessController {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-				StudentModel student = studentService.getStudentByEmail(businessModel.getUsername());
+				Student student = studentService.getStudentByUsername(businessModel.getUsername());
 				if (student != null) {
 					student.setRole("ROLE_BUSINESS");
 					student.setEnabled(1);
@@ -273,7 +273,7 @@ public class BusinessController {
         String username = ((UserDetails) principal).getUsername();
         StudentModel student = studentService.getStudentByName(username);
         String email = student.getUsername();
-        Business business = businessService.getIdByEmail(email);
+        Business business = businessService.getIdByUsername(email);
         List<ProFamily> profesionalFamilies = proFamilyService.getAllNotEmpty();
         model.addAttribute("profesionalFamilies", profesionalFamilies);
         
@@ -342,7 +342,7 @@ public class BusinessController {
 
         StudentModel student = studentService.getStudentByName(username);
         String email = student.getUsername();
-        Business business = businessService.getIdByEmail(email);
+        Business business = businessService.getIdByUsername(email);
         List<ProFamily> profesionalFamilies = proFamilyService.getAllNotEmpty();
         model.addAttribute("profesionalFamilies", profesionalFamilies);
 
