@@ -215,6 +215,8 @@ public class StudentServiceImpl implements StudentService, UserDetailsService {
 		for(Servicio servicio: services) {
 			servicioLista.add(servicioService.entity2model(servicio));
 		}
+		System.out.println("1  - " + servicioLista);
+
 		return servicioLista;
 	}
 //--------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -226,9 +228,12 @@ public class StudentServiceImpl implements StudentService, UserDetailsService {
 		Student student=studentRepository.findById(id);
 		List<ServicioModel>servicioLista=new ArrayList<>();
 		List<Servicio>services=servicioRepository.findByProfesionalFamilyId(student.getProfesionalFamily());
-		for(Servicio servicio: services) {
-			servicioLista.add(servicioService.entity2model(servicio));
+		for(Servicio s: services) {
+			if(s.getStudentId().getId() == student.getId())
+				servicioLista.add(servicioService.entity2model(s));
 		}
+		System.out.println("2  - " + servicioLista);
+
 		return servicioLista;
 	}
 //--------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -240,9 +245,11 @@ public class StudentServiceImpl implements StudentService, UserDetailsService {
 		Student student=studentRepository.findById(id);
 		List<ServicioModel>servicioLista=new ArrayList<>();
 		List<Servicio>services=servicioRepository.findByProfesionalFamilyId(student.getProfesionalFamily());
-		for(Servicio servicio: services) {
-			servicioLista.add(servicioService.entity2model(servicio));
+		for(Servicio s: services) {
+			if(s.getStudentId() == null)
+			servicioLista.add(servicioService.entity2model(s));
 		}
+		System.out.println("3  - " + servicioLista);
 		return servicioLista;
 	}
 //--------------------------------------------------------------------------------------------------------------------------------------------------------
