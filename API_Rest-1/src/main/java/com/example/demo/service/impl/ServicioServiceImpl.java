@@ -27,6 +27,7 @@ public class ServicioServiceImpl implements ServicioService {
 
     private final ServicioRepository servicioRepository;
     
+    
 //    @Autowired
 //    private ReportRepository reportRepository;
     
@@ -49,6 +50,55 @@ public class ServicioServiceImpl implements ServicioService {
 		ModelMapper mapper = new ModelMapper();
 		return mapper.map(servicio, ServicioModel.class);
 	}
+	
+//	@Override
+//	public List<ServicioModel> getFilteredServices(String opcion, String filterBy,Date startDate, Date endDate) {
+//		List<ServicioModel> listServicios = new ArrayList<>();
+//
+//	    if (!filterBy.equals("null")) {
+//	        if (filterBy.equals("finishedServices")) {
+//	            if (Integer.parseInt(opcion) != 0) {
+//	                ProFamily profam = proFamilyService.findById(Integer.parseInt(opcion));
+//	                String proFamName = profam.getName();
+//	                listServicios = getFinishedServiciosByProFamily(proFamName);
+//	            } else {
+//	                listServicios = getFinishedServicios();
+//	            }
+//	        } else if (filterBy.equals("asignados_no_realizados")) {
+//	            if (Integer.parseInt(opcion) != 0) {
+//	                ProFamily profam = proFamilyService.findById(Integer.parseInt(opcion));
+//	                String proFamName = profam.getName();
+//	                listServicios = getAssignedButUncompletedServiciosByProFamily(proFamName);
+//	            } else {
+//	                listServicios = getAssignedButUncompletedServices();
+//	            }
+//	        } else if (filterBy.equals("no_asignados")) {
+//	            if (Integer.parseInt(opcion) != 0) {
+//	                ProFamily profam = proFamilyService.findById(Integer.parseInt(opcion));
+//	                String proFamName = profam.getName();
+//	                listServicios = getUnassignedServiciosByProFamily(proFamName);
+//	            } else {
+//	                listServicios = getUnassignedServicios();
+//	            }
+//	        }else if(filterBy.equals("all")) {
+//	        	listServicios = getAllServicios();
+//	        }
+//	    } else if (Integer.parseInt(opcion) != 0) {
+//	        ProFamily profam = proFamilyService.findById(Integer.parseInt(opcion));
+//	        String proFamName = profam.getName();
+//	        listServicios = findServiciosByProFamily(proFamName);
+//	    } else {
+//	        listServicios = getAllServicios();
+//	    }
+//	    
+//	    if (startDate != null && endDate != null) {
+//	        listServicios = listServicios.stream()
+//	                .filter(servicio -> servicio.getRegisterDate().after(startDate) && servicio.getRegisterDate().before(endDate))
+//	                .collect(Collectors.toList());
+//	    }
+//
+//	    return listServicios;
+//	}
 	
 	@Override
 	public Servicio addServicio(ServicioModel servicioModel) {
@@ -95,92 +145,7 @@ public class ServicioServiceImpl implements ServicioService {
 	    servicio.setDeleted(0);
 	    return servicioRepository.save(servicio);
 	}
-	
-//	@Override
-//	public Report createReportByServicioId(int servicioId, String reportText, int serviceTime, int studentId) {
-//	    Servicio servicio = servicioRepository.findById(servicioId);
-//
-//	    if (servicio != null) {
-//	        Report report = new Report();
-//	        report.setServiceTime(serviceTime);
-//	        report.setReport(reportText);
-//	        Student student = studentRepository.findById(studentId);
-//
-//	        if (student != null) {
-//	            report.setStudentId(student);
-//	        }
-//
-//	        report.setServicioId(servicio);
-//	        servicio.setFinished(1);
-//	        updateServicio(entity2model(servicio));
-//	        return reportRepository.save(report);
-//	    }
-//	    return null; 
-//	}
 
-
-
-//	@Override
-//	public Servicio rateServicio(int servicioId, float valoracion) {
-//	    Servicio servicio = servicioRepository.findById(servicioId);
-//	    servicio.setValoration(valoracion);
-//	    return servicioRepository.save(servicio);
-//	}
-	
-//	@Override
-//	public Servicio finishServicio(int servicioId) {
-//	    Servicio servicio = servicioRepository.findById(servicioId);
-//	    servicio.setFinished(1);
-//	    return servicioRepository.save(servicio);
-//	}
-//	
-//	@Override
-//	public Servicio commentServicio(int servicioId, String comment) {
-//	    Servicio servicio = servicioRepository.findById(servicioId);
-//	    servicio.setComment(comment);
-//	    return servicioRepository.save(servicio);
-//	}
-//	
-//	@Override
-//	public List<ServicioModel> getFinishedServicios() {
-//	    List<Servicio> finishedServicios = servicioRepository.findByFinished(1);
-//	    List<ServicioModel> servicioModels = new ArrayList<>();
-//
-//	    for (Servicio servicio : finishedServicios) {
-//	        ServicioModel servicioModel = entity2model(servicio);
-//	        servicioModels.add(servicioModel);
-//	    }
-//
-//	    return servicioModels;
-//	}
-//	
-//	@Override
-//	public List<ServicioModel> getUnassignedServicios() {
-//	    List<Servicio> unassignedServicios = servicioRepository.findByStudentIdIsNull();
-//	    List<ServicioModel> servicioModels = new ArrayList<>();
-//
-//	    for (Servicio servicio : unassignedServicios) {
-//	        ServicioModel servicioModel = entity2model(servicio);
-//	        servicioModels.add(servicioModel);
-//	    }
-//
-//	    return servicioModels;
-//	}
-//	
-//	@Override
-//	public List<ServicioModel> getAssignedButUncompletedServices() {
-//	    List<Servicio> assignedButUncompletedServices = servicioRepository.findByStudentIdIsNotNullAndFinishedIsNot(1);
-//	    List<ServicioModel> servicioModels = new ArrayList<>();
-//
-//	    for (Servicio servicio : assignedButUncompletedServices) {
-//	        ServicioModel servicioModel = entity2model(servicio);
-//	        servicioModels.add(servicioModel);
-//	    }
-//
-//	    return servicioModels;
-//	}
-//
-//
 	@Override
 	public List<ServicioModel> findServiciosByProFamily(String familyName) {
 	    List<ServicioModel> servicioModels = new ArrayList<>();
@@ -222,19 +187,6 @@ public class ServicioServiceImpl implements ServicioService {
 		
 	}
 
-//	@Override
-//    public List<Report> getReportsForServicesByBusinessId(Business business) {
-//        List<ServicioModel> services = getServicesByBusinessId(business);
-//        List<Report> reports = new ArrayList<>();
-//
-//        for (ServicioModel servicioModel : services) {
-//            List<Report> reportsForService = reportRepository.findAllByServicioId(model2entity(servicioModel));
-//            reports.addAll(reportsForService);
-//        }
-//
-//        return reports;
-//    }
-
 	@Override
 	public Servicio getServicioById(int serviceId) {
         return servicioRepository.findById(serviceId);
@@ -248,138 +200,4 @@ public class ServicioServiceImpl implements ServicioService {
 		Collections.sort(reports, Comparator.comparing(ProFamily::getName));
 		return reports;
 	}
-
-	
-//	@Override
-//	public List<ServicioModel> getFinishedServiciosByProFamily(String familyName) {
-//	    List<ServicioModel> servicioModels = new ArrayList<>();
-//
-//	    List<Servicio> finishedServicios = servicioRepository.findByFinished(1);
-//
-//	    for (Servicio servicio : finishedServicios) {
-//	        if (servicio.getProfesionalFamilyId() != null && servicio.getProfesionalFamilyId().getName().equals(familyName)) {
-//	            servicioModels.add(entity2model(servicio));
-//	        }
-//	    }
-//
-//	    return servicioModels;
-//	}
-//	
-//	@Override
-//	public List<ServicioModel> getUnassignedServiciosByProFamily(String familyName) {
-//	    List<ServicioModel> servicioModels = new ArrayList<>();
-//
-//	    List<Servicio> finishedServicios = servicioRepository.findByStudentIdIsNull();
-//
-//	    for (Servicio servicio : finishedServicios) {
-//	        if (servicio.getProfesionalFamilyId() != null && servicio.getProfesionalFamilyId().getName().equals(familyName)) {
-//	            servicioModels.add(entity2model(servicio));
-//	        }
-//	    }
-//
-//	    return servicioModels;
-//	}
-//	
-//	@Override
-//	public List<ServicioModel> getAssignedButUncompletedServiciosByProFamily(String familyName) {
-//	    List<ServicioModel> servicioModels = new ArrayList<>();
-//
-//	    List<Servicio> finishedServicios = servicioRepository.findByStudentIdIsNotNullAndFinishedIsNot(1);
-//
-//	    for (Servicio servicio : finishedServicios) {
-//	        if (servicio.getProfesionalFamilyId() != null && servicio.getProfesionalFamilyId().getName().equals(familyName)) {
-//	            servicioModels.add(entity2model(servicio));
-//	        }
-//	    }
-//
-//	    return servicioModels;
-//	}
-//
-//	@Override
-//	public Servicio assignStudent(int servicioId, int studentId) {
-//		Servicio servicio = servicioRepository.findById(servicioId);
-//		servicio.setStudentId(studentRepository.findById(studentId));
-//		 return servicioRepository.save(servicio);
-//	}
-//
-//	@Override
-//	public List<ServicioModel> findByValorationIsNotNullAndBusinessIdAndProfesionalFamilyId(Business business,
-//			ProFamily profamily) {
-//		List<ServicioModel>listModel=new ArrayList<>();
-//		List<Servicio>entityList=servicioRepository.findByValorationIsNotNullAndBusinessIdAndProfesionalFamilyId(business, profamily);
-//		for(Servicio servicio: entityList) {
-//			listModel.add(entity2model(servicio));
-//		}
-//		return listModel;
-//	}
-//
-//	@Override
-//	public List<ServicioModel> findByFinishedAndStudentId(int id, Student student) {
-//		List<ServicioModel>modelList=new ArrayList<>();
-//		List<Servicio>entityList=servicioRepository.findByFinishedAndStudentId(1, student);
-//		System.out.println("Que imprime esto: "+entityList);
-//		for(Servicio servicio: entityList) {
-//			modelList.add(entity2model(servicio));
-//		}
-//		return modelList;
-//	}
-//
-	@Override
-	public List<ServicioModel> getFilteredServices(String opcion, String filterBy,Date startDate, Date endDate) {
-		List<ServicioModel> listServicios = new ArrayList<>();
-
-	    if (!filterBy.equals("null")) {
-	        if (filterBy.equals("finishedServices")) {
-	            if (Integer.parseInt(opcion) != 0) {
-	                ProFamily profam = proFamilyService.findById(Integer.parseInt(opcion));
-	                String proFamName = profam.getName();
-	                listServicios = getFinishedServiciosByProFamily(proFamName);
-	            } else {
-	                listServicios = getFinishedServicios();
-	            }
-	        } else if (filterBy.equals("asignados_no_realizados")) {
-	            if (Integer.parseInt(opcion) != 0) {
-	                ProFamily profam = proFamilyService.findById(Integer.parseInt(opcion));
-	                String proFamName = profam.getName();
-	                listServicios = getAssignedButUncompletedServiciosByProFamily(proFamName);
-	            } else {
-	                listServicios = getAssignedButUncompletedServices();
-	            }
-	        } else if (filterBy.equals("no_asignados")) {
-	            if (Integer.parseInt(opcion) != 0) {
-	                ProFamily profam = proFamilyService.findById(Integer.parseInt(opcion));
-	                String proFamName = profam.getName();
-	                listServicios = getUnassignedServiciosByProFamily(proFamName);
-	            } else {
-	                listServicios = getUnassignedServicios();
-	            }
-	        }else if(filterBy.equals("all")) {
-	        	listServicios = getAllServicios();
-	        }
-	    } else if (Integer.parseInt(opcion) != 0) {
-	        ProFamily profam = proFamilyService.findById(Integer.parseInt(opcion));
-	        String proFamName = profam.getName();
-	        listServicios = findServiciosByProFamily(proFamName);
-	    } else {
-	        listServicios = getAllServicios();
-	    }
-	    
-	    if (startDate != null && endDate != null) {
-	        listServicios = listServicios.stream()
-	                .filter(servicio -> servicio.getRegisterDate().after(startDate) && servicio.getRegisterDate().before(endDate))
-	                .collect(Collectors.toList());
-	    }
-
-	    return listServicios;
-	}
-//
-//	public List<ServicioModel> getServicesByTwoDates(Date registerDateBegin, Date registerDateEnd) {
-//		List<Servicio>listService=servicioRepository.findByHappeningDateBetween(registerDateBegin, registerDateEnd);
-//		List<ServicioModel>listServiceModel=new ArrayList<>();
-//		for(Servicio servicio:listService) {
-//			listServiceModel.add(entity2model(servicio));
-//		}
-//		return listServiceModel;
-//	}
-
 }

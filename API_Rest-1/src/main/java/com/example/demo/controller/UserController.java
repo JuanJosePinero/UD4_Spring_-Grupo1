@@ -67,16 +67,5 @@ public class UserController {
 		return "Bearer " + token;
 	}
 	
-	
-	@GetMapping("/alumno")
-	private String listAlumno() {
-		studentService.getServiceByStudentProfesionalFamily(1);
-		studentService.getAsignedServiceByStudentProfesionalFamily(1);
-		studentService.getUnassignedServiceByStudentProfesionalFamily(1);
-		
-		System.out.println(studentService.getServiceByStudentProfesionalFamily(1));
-		System.out.println(studentService.getAsignedServiceByStudentProfesionalFamily(1));
 
-		return "hi";
-	}
 }

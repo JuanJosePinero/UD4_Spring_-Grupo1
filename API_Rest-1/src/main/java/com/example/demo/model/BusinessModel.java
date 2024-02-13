@@ -7,7 +7,7 @@ import com.example.demo.entity.Servicio;
 import lombok.Data;
 
 @Data
-public class BusinessModel extends UserDTO{
+public class BusinessModel extends UserModel{
 	
 	private String name, address,phone;
 	private String logo;
@@ -68,9 +68,9 @@ public class BusinessModel extends UserDTO{
 		this.deleted = deleted;
 	}
 
-	public BusinessModel(int id, String username, String password, int enabled, String role, String token,
-			String name, String address, String phone, String logo, List<Servicio> servicioList, int deleted) {
-		super(id, username, password, enabled, role, token);
+	public BusinessModel(String name, String address, String phone, String logo, List<Servicio> servicioList,
+			int deleted) {
+		super();
 		this.name = name;
 		this.address = address;
 		this.phone = phone;
@@ -78,6 +78,5 @@ public class BusinessModel extends UserDTO{
 		this.servicioList = servicioList;
 		this.deleted = deleted;
 	}
-	
 	
 }

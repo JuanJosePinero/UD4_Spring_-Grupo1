@@ -12,7 +12,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Data
-public class StudentModel extends UserDTO {
+public class StudentModel extends UserModel {
 
 	private String name, surname, password, role;
 	private int enabled;
@@ -38,9 +38,6 @@ public class StudentModel extends UserDTO {
 	public StudentModel() {
 		super();
 	}
-	
-	
-	
 	
 }
 
