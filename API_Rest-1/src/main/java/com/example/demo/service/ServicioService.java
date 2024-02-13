@@ -18,44 +18,51 @@ public interface ServicioService {
 	
 	Servicio updateServicio(ServicioModel servicioModel);
 	
-	Servicio rateServicio(int servicioId, float valoration);
-	
-	Servicio commentServicio(int servicioId, String comment);
-	
-	public List<ServicioModel> getFinishedServicios();
-
-	List<ServicioModel> getUnassignedServicios();
-
-	List<ServicioModel> getAssignedButUncompletedServices();
-
-	List<ServicioModel> findServiciosByProFamily(String familyName);
-
-	List<ServicioModel> getAllServicios();
+	Servicio getServicioById(int serviceId);
 	
 	public List<ServicioModel>getServicesByBusinessId(Business business);
 	
+	List<ServicioModel> findServiciosByProFamily(String familyName);
+	
+	List<ServicioModel> getAllServicios();
+	
+	List<ServicioModel> getFilteredServices(String opcion, String filterBy);
+
+	
+//	Servicio rateServicio(int servicioId, float valoration);
+	
+//	Servicio commentServicio(int servicioId, String comment);
+	
+//	public List<ServicioModel> getFinishedServicios();
+
+//	List<ServicioModel> getUnassignedServicios();
+
+//	List<ServicioModel> getAssignedButUncompletedServices();
+
+
+	
+	
 //	public abstract List<Report> getReportsForServicesByBusinessId(Business business);
 	
-	Servicio getServicioById(int serviceId);
+	
 
-	Servicio finishServicio(int servicioId);
+//	Servicio finishServicio(int servicioId);
 
-	public List<ServicioModel> getFinishedServiciosByProFamily(String familyName);
+//	public List<ServicioModel> getFinishedServiciosByProFamily(String familyName);
 
-	List<ServicioModel> getUnassignedServiciosByProFamily(String familyName);
+//	List<ServicioModel> getUnassignedServiciosByProFamily(String familyName);
 
-	List<ServicioModel> getAssignedButUncompletedServiciosByProFamily(String familyName);
+//	List<ServicioModel> getAssignedButUncompletedServiciosByProFamily(String familyName);
 
 //	Report createReportByServicioId(int servicioId, String reportText, int serviceTime, int studentId);
 
-	Servicio assignStudent(int servicioId, int studentId);
+//	Servicio assignStudent(int servicioId, int studentId);
 	
-	List<ServicioModel>findByValorationIsNotNullAndBusinessIdAndProfesionalFamilyId(Business business,ProFamily profamily);
+//	List<ServicioModel>findByValorationIsNotNullAndBusinessIdAndProfesionalFamilyId(Business business,ProFamily profamily);
 	
-	List<ServicioModel>findByFinishedAndStudentId(int id, Student student);
+//	List<ServicioModel>findByFinishedAndStudentId(int id, Student student);
 
-	List<ServicioModel> getFilteredServices(String opcion, String filterBy,Date startDate, Date endDate);
 	
-	List<ServicioModel> getServicesByTwoDates(Date registerDateBegin,Date registerDateEnd);
+//	List<ServicioModel> getServicesByTwoDates(Date registerDateBegin,Date registerDateEnd);
 
 }

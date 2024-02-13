@@ -19,29 +19,10 @@ public interface BusinessService {
 
 	Business getBusinessById(int id);
 
-	Business saveBusiness(Business business);
-
-    int deleteBusiness(int id);
-
-    Business updateBusiness(Business business);
-
-    Business addBusiness(BusinessModel businessModel);
-    
 	public BusinessModel entity2model(Business	business);
 	
 	public Business model2entity(BusinessModel	businessModel);
 	
 	public Business getIdByUsername(String username);
-
-	List<Business> getBusinessOrderedByServiceAmount();
-
-	List<Business> getBusinessOrderedByServiceFinished();
-
-	List<Business> getBusinessList(String filterBy);
-
-	Map<Integer, Integer> getAllNumberOfServices(List<Business> business);
-
-	Map<Integer, Integer> getAllNumberOfFinishedServices(List<Business> business);
-
-
+	
 }

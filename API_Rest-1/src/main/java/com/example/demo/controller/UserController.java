@@ -29,23 +29,11 @@ public class UserController {
 	@Autowired
 	@Qualifier("studentService")
 	private StudentService studentService;
-	
-	@Autowired
-	private AuthenticationManager authenticationManager;
-	
+
 	@PostMapping("/login")
 	public com.example.demo.entity.User login(@RequestParam("user") String username,
 			@RequestParam("password") String pwd){
 		
-//		String token = getJWTToken(username);
-//		User user = new User();
-//		user.setPassword(pwd);
-//		user.setToken(token);		
-//		return user;
-		
-		Authentication authentication = authenticationManager.authenticate(
-				new UsernamePasswordAuthenticationToken(username, pwd));
-		SecurityContextHolder.getContext().setAuthentication(authentication);
 		com.example.demo.entity.User usuario = studentService.getStudentByUsername(username);
 		String token = getJWTToken(username);
 		usuario.setToken(token);
