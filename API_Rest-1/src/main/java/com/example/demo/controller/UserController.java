@@ -12,9 +12,11 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.dto.AuthenticationResponseDTO;
 import com.example.demo.entity.User;
 import com.example.demo.service.StudentService;
 import com.example.demo.service.UserService;
@@ -23,6 +25,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
 @RestController
+@RequestMapping("/user")
 public class UserController {
 
 	@Autowired
@@ -34,14 +37,14 @@ public class UserController {
 	private UserService userService;
 
 	@PostMapping("/login")
-	public ResponseEntity<LoginResponse> login(@RequestParam("user") String username,
+	public ResponseEntity<AuthenticationResponseDTO> login(@RequestParam("user") String username,
 			@RequestParam("password") String pwd) {
 		User usuario = userService.findUsuario(username, pwd);
 		if (usuario != null) {
 			String token = getJWTToken(usuario);
-			String nombreEmpresa = usuario.getEmpresa() != null ? usuario.getEmpresa().getNombre() : "";
-			String nombreAlumno = usuario.getAlumno() != null ? usuario.getAlumno().getNombre() : "";
-			LoginResponseDTO response = new LoginResponseDTO(usuario.getId(),
+			String nombreEmpresa = usuario.getBusinessID() != null ? usuario.getBusinessID().getName() : "";
+			String nombreAlumno = usuario.getStudentID() != null ? usuario.getStudentID().getName() : "";
+			AuthenticationResponseDTO response = new AuthenticationResponseDTO(usuario.getId(),
 					nombreEmpresa.equalsIgnoreCase("") ? nombreEmpresa : nombreAlumno,
 					usuario.getEmail(),
 					usuario.getRole(),
@@ -52,12 +55,12 @@ public class UserController {
 	}
 	
 	@PostMapping("/register")
-	public com.example.demo.entity.Student saveUser(@RequestBody com.example.demo.model.StudentModel studentModel){
-		return studentService.register(studentModel);
+	public com.example.demo.entity.User saveUser(@RequestBody com.example.demo.model.UserModel userModel){
+		return userService.register(userModel);
 		
 	}
 	
-	private String getJWTToken(String username) {
+	private String getJWTToken(User user) {
 		String secretKey = "mySecretKey";
 		List<GrantedAuthority> grantedAuthorities = AuthorityUtils
 				.commaSeparatedStringToAuthorityList("ROLE_USER");
@@ -65,7 +68,7 @@ public class UserController {
 		String token = Jwts
 				.builder()
 				.setId("softtekJWT")
-				.setSubject(username)
+				.setSubject(user.getUsername())
 				.claim("authorities",
 						grantedAuthorities.stream()
 								.map(GrantedAuthority::getAuthority)

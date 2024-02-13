@@ -4,6 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,11 +22,14 @@ public class User {
 	private String username;
 	@Column(name="password", nullable=false)
 	private String password;
+	private String email;
 	private int enabled;
 	private String role;
 	private String token;	
-	@OneToOne(mappedBy="id")
+	@OneToOne
+	@JoinColumn(name = "studentId")
 	private Student studentID;
-	@OneToOne(mappedBy="id")
+	@OneToOne
+	@JoinColumn(name = "businessId")
 	private Business businessID;
 }

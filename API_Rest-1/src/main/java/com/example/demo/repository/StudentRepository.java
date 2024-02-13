@@ -13,8 +13,8 @@ import com.example.demo.entity.Student;
 public interface StudentRepository extends JpaRepository<Student, Serializable>{
 	
 	Student findById(int id);
-	public abstract Student findByUsername(String username);
-	List<Student> findAllByEnabledIn(List<Integer> enabledValues);
+	public abstract Student findBySurname(String surname);
+//	List<Student> findAllByEnabledIn(List<Integer> enabledValues);
 	Student findByName(String name);
 	List<Student> findByProfesionalFamily(ProFamily proFamily);
 

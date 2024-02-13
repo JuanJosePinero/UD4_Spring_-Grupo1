@@ -58,14 +58,19 @@ public class StudentServiceImpl implements StudentService, UserDetailsService {
 		ModelMapper mapper = new ModelMapper();
 		return mapper.map(studentModel, Student.class);
 	}
-	@Override
-	public StudentModel entity2model(Student student) {
-	    ModelMapper mapper = new ModelMapper();
-	    mapper.createTypeMap(Student.class, StudentModel.class)
-	            .addMapping(src -> ((Student) src).getEnabled(), StudentModel::setEnabled);
-	    StudentModel studentModel = mapper.map(student, StudentModel.class);
-	    return studentModel;
-	}
+//	@Override
+//	public StudentModel entity2model(Student student) {
+//	    ModelMapper mapper = new ModelMapper();
+//	    mapper.createTypeMap(Student.class, StudentModel.class)
+//	            .addMapping(src -> ((Student) src).getEnabled(), StudentModel::setEnabled);
+//	    StudentModel studentModel = mapper.map(student, StudentModel.class);
+//	    return studentModel;
+//	}
+	
+//	@Override
+//	public Student register(StudentModel studentModel) {
+//		
+//	}
 	
 	@Override
 	public StudentModel getStudentByName(String name) {
@@ -136,26 +141,39 @@ public class StudentServiceImpl implements StudentService, UserDetailsService {
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		com.example.demo.entity.Student student = studentRepository.findByUsername(username);
-		UserBuilder builder = null;
-		
-		if (student != null) {
-			if (student.getEnabled() == 0) {
-				return User.withUsername(student.getName())
-	                    .disabled(true)
-	                    .password(student.getPassword())
-	                    .authorities(new SimpleGrantedAuthority(student.getRole()))
-	                    .build();
-	        
-	        }
-			builder = User.withUsername(student.getName());
-			builder.disabled(false);
-			builder.password(student.getPassword());
-			builder.authorities(new SimpleGrantedAuthority(student.getRole()));
-		} else
-			throw new UsernameNotFoundException("Student not found or account is not activated");
-		return builder.build();
+		// TODO Auto-generated method stub
+		return null;
 	}
+
+	@Override
+	public StudentModel entity2model(Student student) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+//	@Override
+//	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+//		com.example.demo.entity.Student student = studentRepository.findByUsername(username);
+//		UserBuilder builder = null;
+//		
+//		if (student != null) {
+//			if (student.getEnabled() == 0) {
+//				return User.withUsername(student.getName())
+//	                    .disabled(true)
+//	                    .password(student.getPassword())
+//	                    .authorities(new SimpleGrantedAuthority(student.getRole()))
+//	                    .build();
+//	        
+//	        }
+//			builder = User.withUsername(student.getName());
+//			builder.disabled(false);
+//			builder.password(student.getPassword());
+//			builder.authorities(new SimpleGrantedAuthority(student.getRole()));
+//		} else
+//			throw new UsernameNotFoundException("Student not found or account is not activated");
+//		return builder.build();
+//	}
+
 
 //	@Bean
 //	PasswordEncoder passwordEncoder() {

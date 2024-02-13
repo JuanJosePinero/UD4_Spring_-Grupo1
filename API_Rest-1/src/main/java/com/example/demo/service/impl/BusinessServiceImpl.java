@@ -61,7 +61,7 @@ public class BusinessServiceImpl implements BusinessService {
 
 	@Override
 	public Business getIdByUsername(String username) {
-		Business business=businessRepository.findByUsername(username);
+		Business business=businessRepository.findByName(username);
 		return business;
 	}
 	
