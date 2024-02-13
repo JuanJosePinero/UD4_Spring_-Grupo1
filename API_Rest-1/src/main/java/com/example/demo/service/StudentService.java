@@ -11,54 +11,22 @@ import com.example.demo.model.StudentModel;
 public interface StudentService {
 
 	List<Student> listAllStudents();
-//	
-//	List<StudentModel> listAllEnabledOrDisabledStudents();
-//	
+
 	StudentModel getStudentById(int id);
-//	
+	
 	Student model2entity(StudentModel studentModel);
-
-	public Student register(Student studentModel);
-
-	public boolean login(String email, String password);
-
-	public boolean authenticate(String email, String password);
-//
-//	int deleteStudent(int id);
-//
-	Student updateStudent(Student studentModel);
-//	
-//	public int enableStudent(int studentId);
-//	
-//	public boolean mailExists(String mail);
-//	
-//	public boolean isMailValid(String mail);
 	
 	public StudentModel entity2model(Student student);
 	
+	public List<ServicioModel> getServiceByStudentProfesionalFamily(int id);
+	public List<ServicioModel> getUnassignedServiceByStudentProfesionalFamily(int id);
+	public List<ServicioModel> getAsignedServiceByStudentProfesionalFamily(int id);
+	
 	public StudentModel getStudentByName(String name);
 	
-	public Student getStudentByUsername(String username);
+//	public Student getStudentByUsername(String username);
 	
-	public List<ServicioModel> getServiceByStudentProfesionalFamily(int id);
 	
-	public List<ServicioModel> getAsignedServiceByStudentProfesionalFamily(int id);
-	public List<ServicioModel> getUnassignedServiceByStudentProfesionalFamily(int id);
-	
-//	public StudentModel getStudentByEmail(String email);
-	
-//	public List<Student> getStudentsOrderedByValorationAsc();
-//	
-//	public List<Student> getStudentsOrderedByValorationDesc();
-//	
-//	public List<Student> getStudentsOrderedByServiceAmount();
-//	
-//	public List<Student> getStudentsByProFamily(int proFamilyId);
-//
-//	List<Student> getAdminScreenFilterBy(String opcion, String familiaProf);
-//	
-//	public Map<Integer, Integer> getNumberOfFinishedServices(List<Student> studentList);
-//
-//	Map<Integer, Double> getAverageValoration(List<Student> studentList); 
+ 
 
 }
