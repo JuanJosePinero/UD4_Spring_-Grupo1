@@ -67,22 +67,28 @@ public class ServicioServiceImpl implements ServicioService {
 	}
 	
 	@Override
-	public Servicio addServicio(ServicioModel servicioModel) {
-		Servicio servicio = model2entity(servicioModel);
-		servicio.setTitle(servicioModel.getTitle());
-		servicio.setDescription(servicioModel.getDescription());
-		servicio.setHappeningDate(servicioModel.getHappeningDate());
-		servicio.setRegisterDate(servicioModel.getRegisterDate());
-		servicio.setId(servicioModel.getId());
-		servicio.setBusinessId(servicioModel.getBusinessId());
-		servicio.setProfesionalFamilyId(servicioModel.getProfesionalFamilyId());
-		servicio.setStudentId(servicioModel.getStudentId());
-		servicio.setValoration(0);
-		servicio.setComment(null);
-		servicio.setDeleted(0);
-		servicio.setFinished(0);
-		return servicioRepository.save(servicio);	
+	public ServicioModel addServicio(ServicioModel servicioModel) {
+	    Servicio servicio = model2entity(servicioModel);
+	    servicio.setTitle(servicioModel.getTitle());
+	    servicio.setDescription(servicioModel.getDescription());
+	    servicio.setHappeningDate(servicioModel.getHappeningDate());
+	    servicio.setRegisterDate(servicioModel.getRegisterDate());
+	    servicio.setId(servicioModel.getId());
+	    servicio.setBusinessId(servicioModel.getBusinessId());
+	    servicio.setProfesionalFamilyId(servicioModel.getProfesionalFamilyId());
+	    servicio.setStudentId(servicioModel.getStudentId());
+	    servicio.setValoration(0);
+	    servicio.setComment(null);
+	    servicio.setDeleted(0);
+	    servicio.setFinished(0);
+	    
+	    servicio = servicioRepository.save(servicio);
+
+	    ServicioModel createdServicio = entity2model(servicio);
+
+	    return createdServicio;    
 	}
+
 
 	@Override
 	public int deleteServicio(int id) {
@@ -97,20 +103,26 @@ public class ServicioServiceImpl implements ServicioService {
 	}
 
 	@Override
-	public Servicio updateServicio(ServicioModel servicioModel) {
+	public ServicioModel updateServicio(ServicioModel servicioModel) {
+	    ServicioModel updatedServicio = null;
 	    Servicio servicio = servicioRepository.findById(servicioModel.getId());
-	    servicio.setTitle(servicioModel.getTitle());
-	    servicio.setDescription(servicioModel.getDescription());
-	    servicio.setHappeningDate(servicioModel.getHappeningDate());
-	    servicio.setRegisterDate(servicioModel.getRegisterDate());
-	    servicio.setId(servicioModel.getId());
-	    servicio.setBusinessId(servicioModel.getBusinessId());
-	    servicio.setProfesionalFamilyId(servicioModel.getProfesionalFamilyId());
-	    servicio.setStudentId(servicioModel.getStudentId());
-	    
-	    servicio.setDeleted(0);
-	    return servicioRepository.save(servicio);
+
+	    if (servicio != null && servicio.getBusinessId().getId() == servicioModel.getBusinessId().getId()) {
+	        servicio.setTitle(servicioModel.getTitle());
+	        servicio.setDescription(servicioModel.getDescription());
+	        servicio.setHappeningDate(servicioModel.getHappeningDate());
+	        servicio.setRegisterDate(servicioModel.getRegisterDate());
+	        servicio.setProfesionalFamilyId(servicioModel.getProfesionalFamilyId());
+	        servicio.setStudentId(servicioModel.getStudentId());
+
+	        servicio = servicioRepository.save(servicio);
+
+	        updatedServicio = entity2model(servicio);
+	    }
+
+	    return updatedServicio;
 	}
+
 
 	@Override
 	public List<ServicioModel> findServiciosByProFamily(String familyName) {
@@ -154,9 +166,10 @@ public class ServicioServiceImpl implements ServicioService {
 	}
 
 	@Override
-	public Servicio getServicioById(int serviceId) {
-        return servicioRepository.findById(serviceId);
-    }
+	public ServicioModel getServicioById(int serviceId) {
+	    Servicio servicio = servicioRepository.findById(serviceId);
+	    return servicio != null ? entity2model(servicio) : null;
+	}
 
 	public List<ProFamily> getProfessionalFamiliesByBusinessId(List<Servicio>listServices){
 		List<ProFamily>reports=new ArrayList<>();

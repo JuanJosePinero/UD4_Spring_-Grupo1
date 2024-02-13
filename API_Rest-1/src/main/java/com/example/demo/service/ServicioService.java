@@ -12,13 +12,13 @@ import com.example.demo.model.ServicioModel;
 
 public interface ServicioService {
 	
-	public Servicio addServicio(ServicioModel servicioModel);
+	public ServicioModel addServicio(ServicioModel servicioModel);
 	
 	int deleteServicio(int id);
 	
-	Servicio updateServicio(ServicioModel servicioModel);
+	ServicioModel updateServicio(ServicioModel servicioModel);
 	
-	Servicio getServicioById(int serviceId);
+	ServicioModel getServicioById(int serviceId);
 	
 	public List<ServicioModel>getServicesByBusinessId(Business business);
 	
