@@ -20,7 +20,7 @@ public interface StudentService {
 	
 	public List<ServicioModel> getServiceByStudentProfesionalFamily(int id);
 	public List<ServicioModel> getUnassignedServiceByStudentProfesionalFamily(int id);
-	public List<ServicioModel> getAsignedServiceByStudentProfesionalFamily(int id);
+	public List<ServicioModel> getAssignedServiceByStudentProfesionalFamily(int id);
 	
 	public StudentModel getStudentByName(String name);
 	

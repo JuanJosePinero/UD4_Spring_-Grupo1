@@ -106,7 +106,7 @@ public class StudentServiceImpl implements StudentService, UserDetailsService {
 //--------------------------------------------------------------------------------------------------------------------------------------------------------
 //	Alumnos: recuperan todos los servicios correspondientes a su familia profesional, que tiene asignados
 	@Override
-	public List<ServicioModel> getAsignedServiceByStudentProfesionalFamily(int id) {
+	public List<ServicioModel> getAssignedServiceByStudentProfesionalFamily(int id) {
 		Student student=studentRepository.findById(id);
 		List<ServicioModel>servicioLista=new ArrayList<>();
 		List<Servicio>services=servicioRepository.findByProfesionalFamilyId(student.getProfesionalFamily());

@@ -82,20 +82,20 @@ public class StudentController {
 	    return STUDENT_SERVICES;
 	}
 	
-	@GetMapping("/viewServices/assign/{serviceId}")
-	public String studentAssigned(@PathVariable("serviceId") int serviceId, Model model, RedirectAttributes redirectAttributes) {
+	@GetMapping("/viewServicesAssigned")
+	public String studentAssigned(@RequestParam("studentUsername") String name, Model model) {
+
 	    Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 	    String nameStudent = ((UserDetails) principal).getUsername();  
         StudentModel student=studentService.getStudentByName(nameStudent);
-        int idStudent=student.getId();   
-        servicioService.assignStudent(serviceId, idStudent);
+        int idStudent=student.getId();
+   
 	    ProFamily proFamily = student.getProfesionalFamily();
 		if (proFamily != null) {
-		    List<ServicioModel> serviceList = studentService.getServiceByStudentProfesionalFamily(idStudent);
+		    List<ServicioModel> serviceList = studentService.getAssignedServiceByStudentProfesionalFamily(idStudent);
 		    
 		    model.addAttribute("serviceList", serviceList);
 		    model.addAttribute("idStudent",idStudent);
-		    redirectAttributes.addFlashAttribute("successMessage", "You assign correctly");
 		} else {
 		    model.addAttribute("error", "Student does not have any services.");
 		}
@@ -103,61 +103,26 @@ public class StudentController {
 	    return STUDENT_SERVICES;
 	}
 	
-	@GetMapping("/viewComments")
-	public String studentComments(@RequestParam("studentUsername") String name, Model model) {
+	@GetMapping("/viewServicesUnassigned")
+	public String studentUnassigned(@RequestParam("studentUsername") String name, Model model) {
+
 	    Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-	    String nameStudent = ((UserDetails) principal).getUsername();		       
-        StudentModel student=studentService.getStudentByName(nameStudent);	        
+	    String nameStudent = ((UserDetails) principal).getUsername();  
+        StudentModel student=studentService.getStudentByName(nameStudent);
         int idStudent=student.getId();
-	    List<ServicioModel> serviceList = servicioService.findByFinishedAndStudentId(idStudent, studentService.model2entity(student));
-	    System.out.println("QUEEEE: "+serviceList);
-		model.addAttribute("serviceList", serviceList);
-		model.addAttribute("idStudent",idStudent);
-	    return STUDENT_COMMENTS;
+   
+	    ProFamily proFamily = student.getProfesionalFamily();
+		if (proFamily != null) {
+		    List<ServicioModel> serviceList = studentService.getUnassignedServiceByStudentProfesionalFamily(idStudent);
+		    
+		    model.addAttribute("serviceList", serviceList);
+		    model.addAttribute("idStudent",idStudent);
+		} else {
+		    model.addAttribute("error", "Student does not have any services.");
+		}
+
+	    return STUDENT_SERVICES;
 	}
 	
-	@GetMapping("/viewValorations")
-	public String studentValorations(@RequestParam("studentUsername") String name, Model model) {
-	    Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-	    String nameStudent = ((UserDetails) principal).getUsername();		       
-        StudentModel student=studentService.getStudentByName(nameStudent);	        
-        int idStudent=student.getId();
-	    List<ServicioModel> serviceList = servicioService.findByFinishedAndStudentId(idStudent, studentService.model2entity(student));				    
-		model.addAttribute("serviceList", serviceList);
-		model.addAttribute("idStudent",idStudent);
-	    return STUDENT_VALORATIONS;
-	}
-	
-//	@GetMapping("/writeReport/{servicioId}")
-//	public String studentReport(@PathVariable("servicioId") int servicioId, Model model, @ModelAttribute("reportModel") ReportModel reportModel) {
-//		Servicio servicio = servicioService.getServicioById(servicioId);
-//		model.addAttribute("servicio", servicio);
-//		model.addAttribute("reportModel", reportModel);
-//		model.addAttribute("servicioId", servicioId);
-//		return STUDENT_REPORT;
-//	}
-//
-//	
-//	@PostMapping("/writeReport")
-//	public String sendReport(@ModelAttribute("servicioId") int serviceId,
-//	                        @ModelAttribute("reportModel") ReportModel reportModel,
-//	                        Model model, RedirectAttributes redirectAttributes) throws ParseException {
-//		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//	    String username = ((UserDetails) principal).getUsername();
-//	    StudentModel student = studentService.getStudentByName(username);
-//	    int studentId = student.getId();
-//
-//	    Report newReport = servicioService.createReportByServicioId(serviceId, reportModel.getReport(), reportModel.getServiceTime(), studentId);
-//	    Date d = newReport.getFullDate();
-//	    Servicio s = servicioService.getServicioById(serviceId);
-//	    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-//	    String formattedDate = dateFormat.format(d);
-//	    s.setHappeningDate(dateFormat.parse(formattedDate));
-//	    servicioService.updateServicio(servicioServiceImpl.entity2model(s));
-//
-//	    redirectAttributes.addFlashAttribute("successMessage", "Service finished correctly");
-//	    return "redirect:/student/viewServices?studentUsername="+username;
-//	    //
-//	}
-	
+
 }
