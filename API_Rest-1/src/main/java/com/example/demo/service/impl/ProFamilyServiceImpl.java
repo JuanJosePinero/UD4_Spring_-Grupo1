@@ -78,25 +78,31 @@ public class ProFamilyServiceImpl implements ProFamilyService {
 		return proFamilyRepository.findAll();
 	}
 
+	@Override
 	public List<ProFamily> getAllNotEmpty() {
-        Map<ProFamily, Integer> familyCounts = new HashMap<>();
-        List<Student> allStudents = studentRepository.findAll();
-        for (Student student : allStudents) {
-        	if(student.getRole().equalsIgnoreCase("ROLE_STUDENT")) {
-	            ProFamily family = student.getProfesionalFamily();
-	            if (family != null) {
-	                familyCounts.put(family, familyCounts.getOrDefault(family, 0) + 1);
-	            }
-        	}
-        }
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-        List<ProFamily> familiesWithStudents = new ArrayList<>();
-        for (Map.Entry<ProFamily, Integer> entry : familyCounts.entrySet()) {
-            if (entry.getValue() > 0) {
-                familiesWithStudents.add(entry.getKey());
-            }
-        }
-
-        return familiesWithStudents;
-    }
+//	public List<ProFamily> getAllNotEmpty() {
+//        Map<ProFamily, Integer> familyCounts = new HashMap<>();
+//        List<Student> allStudents = studentRepository.findAll();
+//        for (Student student : allStudents) {
+//        	if(student.getRole().equalsIgnoreCase("ROLE_STUDENT")) {
+//	            ProFamily family = student.getProfesionalFamily();
+//	            if (family != null) {
+//	                familyCounts.put(family, familyCounts.getOrDefault(family, 0) + 1);
+//	            }
+//        	}
+//        }
+//
+//        List<ProFamily> familiesWithStudents = new ArrayList<>();
+//        for (Map.Entry<ProFamily, Integer> entry : familyCounts.entrySet()) {
+//            if (entry.getValue() > 0) {
+//                familiesWithStudents.add(entry.getKey());
+//            }
+//        }
+//
+//        return familiesWithStudents;
+//    }
 }

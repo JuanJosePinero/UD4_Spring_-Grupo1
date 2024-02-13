@@ -18,6 +18,8 @@ public interface StudentService {
 	
 	public StudentModel entity2model(Student student);
 	
+	public Student register(StudentModel studentModel);
+
 	public List<ServicioModel> getServiceByStudentProfesionalFamily(int id);
 	public List<ServicioModel> getUnassignedServiceByStudentProfesionalFamily(int id);
 	public List<ServicioModel> getAssignedServiceByStudentProfesionalFamily(int id);
