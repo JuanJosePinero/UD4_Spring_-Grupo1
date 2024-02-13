@@ -51,54 +51,20 @@ public class ServicioServiceImpl implements ServicioService {
 		return mapper.map(servicio, ServicioModel.class);
 	}
 	
-//	@Override
-//	public List<ServicioModel> getFilteredServices(String opcion, String filterBy,Date startDate, Date endDate) {
-//		List<ServicioModel> listServicios = new ArrayList<>();
-//
-//	    if (!filterBy.equals("null")) {
-//	        if (filterBy.equals("finishedServices")) {
-//	            if (Integer.parseInt(opcion) != 0) {
-//	                ProFamily profam = proFamilyService.findById(Integer.parseInt(opcion));
-//	                String proFamName = profam.getName();
-//	                listServicios = getFinishedServiciosByProFamily(proFamName);
-//	            } else {
-//	                listServicios = getFinishedServicios();
-//	            }
-//	        } else if (filterBy.equals("asignados_no_realizados")) {
-//	            if (Integer.parseInt(opcion) != 0) {
-//	                ProFamily profam = proFamilyService.findById(Integer.parseInt(opcion));
-//	                String proFamName = profam.getName();
-//	                listServicios = getAssignedButUncompletedServiciosByProFamily(proFamName);
-//	            } else {
-//	                listServicios = getAssignedButUncompletedServices();
-//	            }
-//	        } else if (filterBy.equals("no_asignados")) {
-//	            if (Integer.parseInt(opcion) != 0) {
-//	                ProFamily profam = proFamilyService.findById(Integer.parseInt(opcion));
-//	                String proFamName = profam.getName();
-//	                listServicios = getUnassignedServiciosByProFamily(proFamName);
-//	            } else {
-//	                listServicios = getUnassignedServicios();
-//	            }
-//	        }else if(filterBy.equals("all")) {
-//	        	listServicios = getAllServicios();
-//	        }
-//	    } else if (Integer.parseInt(opcion) != 0) {
-//	        ProFamily profam = proFamilyService.findById(Integer.parseInt(opcion));
-//	        String proFamName = profam.getName();
-//	        listServicios = findServiciosByProFamily(proFamName);
-//	    } else {
-//	        listServicios = getAllServicios();
-//	    }
-//	    
-//	    if (startDate != null && endDate != null) {
-//	        listServicios = listServicios.stream()
-//	                .filter(servicio -> servicio.getRegisterDate().after(startDate) && servicio.getRegisterDate().before(endDate))
-//	                .collect(Collectors.toList());
-//	    }
-//
-//	    return listServicios;
-//	}
+	@Override
+	public List<ServicioModel> getFilteredServices(String opcion, String filterBy) {
+		List<ServicioModel> listServicios = new ArrayList<>();
+
+		if (Integer.parseInt(opcion) != 0) {
+	        ProFamily profam = proFamilyService.findById(Integer.parseInt(opcion));
+	        String proFamName = profam.getName();
+	        listServicios = findServiciosByProFamily(proFamName);
+	    } else {
+	        listServicios = getAllServicios();
+	    }
+
+	    return listServicios;
+	}
 	
 	@Override
 	public Servicio addServicio(ServicioModel servicioModel) {
