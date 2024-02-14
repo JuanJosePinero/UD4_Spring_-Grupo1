@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.AuthenticationResponseDTO;
+import com.example.demo.entity.Student;
 import com.example.demo.entity.User;
 import com.example.demo.service.StudentService;
 import com.example.demo.service.UserService;
@@ -27,48 +28,42 @@ import io.jsonwebtoken.SignatureAlgorithm;
 @RestController
 @RequestMapping("/user")
 public class UserController {
-
-	@Autowired
-	@Qualifier("studentService")
-	private StudentService studentService;
 	
 	@Autowired
 	@Qualifier("userService")
 	private UserService userService;
 
 	@PostMapping("/login")
-	public ResponseEntity<AuthenticationResponseDTO> login(@RequestParam("user") String username,
-			@RequestParam("password") String pwd) {
-		User usuario = userService.findUsuario(username, pwd);
-		if (usuario != null) {
-			String token = getJWTToken(usuario);
-			String nombreEmpresa = usuario.getBusinessID() != null ? usuario.getBusinessID().getName() : "";
-			String nombreAlumno = usuario.getStudentID() != null ? usuario.getStudentID().getName() : "";
-			AuthenticationResponseDTO response = new AuthenticationResponseDTO(usuario.getId(),
-					nombreEmpresa.equalsIgnoreCase("") ? nombreEmpresa : nombreAlumno,
-					usuario.getEmail(),
-					usuario.getRole(),
-					token);
-			return ResponseEntity.ok(response);
-		}
-		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+	public ResponseEntity<?> login(@RequestParam("email") String email, @RequestParam("password") String pwd) {
+	    Student student = userService.login(email, pwd);
+	    if (student != null) {
+	        String token = getJWTToken(student);
+	        AuthenticationResponseDTO response = new AuthenticationResponseDTO(student.getId(),
+	                student.getName(),
+	                student.getEmail(),
+	                student.getRole(),
+	                token);
+	        return ResponseEntity.ok(response);
+	    }
+	    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciales inválidas");
 	}
+
 	
 	@PostMapping("/register")
-	public com.example.demo.entity.User saveUser(@RequestBody com.example.demo.model.UserModel userModel){
-		return userService.register(userModel);
+	public com.example.demo.entity.Student saveStudent(@RequestBody com.example.demo.model.StudentModel studentModel){
+		return userService.register(studentModel);
 		
 	}
 	
-	private String getJWTToken(User user) {
+	private String getJWTToken(Student student) {
 		String secretKey = "mySecretKey";
 		List<GrantedAuthority> grantedAuthorities = AuthorityUtils
-				.commaSeparatedStringToAuthorityList("ROLE_USER");
+				.commaSeparatedStringToAuthorityList("ROLE_STUDENT");
 		
 		String token = Jwts
 				.builder()
 				.setId("softtekJWT")
-				.setSubject(user.getUsername())
+				.setSubject(student.getUsername())
 				.claim("authorities",
 						grantedAuthorities.stream()
 								.map(GrantedAuthority::getAuthority)

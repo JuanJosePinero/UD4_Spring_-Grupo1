@@ -1,35 +1,48 @@
 package com.example.demo.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.MappedSuperclass;
 
-@Entity
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
+@MappedSuperclass
 public class User {
+	
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
-	@Column(name="username", unique=true, nullable=false)
-	private String username;
-	@Column(name="password", nullable=false)
-	private String password;
 	private String email;
-	private int enabled;
-	private String role;
-	private String token;	
-	@OneToOne
-	@JoinColumn(name = "studentId")
-	private Student studentID;
-	@OneToOne
-	@JoinColumn(name = "businessId")
-	private Business businessID;
+	
+	public User() {
+		super();
+	}
+
+	public User(int id, String email) {
+		super();
+		this.id = id;
+		this.email = email;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+	
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", email=" + email + "]";
+	}
+
+
 }

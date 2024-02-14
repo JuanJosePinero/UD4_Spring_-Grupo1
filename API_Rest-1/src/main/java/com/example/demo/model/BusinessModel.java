@@ -14,7 +14,16 @@ public class BusinessModel extends UserModel{
 	private List<Servicio> servicioList;
 	private int deleted;
 	
-	
+	public BusinessModel(int id, String name, String address, String phone, String email, String logo,
+			List<Servicio> servicioList, int deleted) {
+		super(id, email);
+		this.name = name;
+		this.address = address;
+		this.phone = phone;
+		this.logo = logo;
+		this.servicioList = servicioList;
+		this.deleted = deleted;
+	}
 
 	public BusinessModel() {
 		super();
@@ -66,17 +75,6 @@ public class BusinessModel extends UserModel{
 
 	public void setDeleted(int deleted) {
 		this.deleted = deleted;
-	}
-
-	public BusinessModel(String name, String address, String phone, String logo, List<Servicio> servicioList,
-			int deleted) {
-		super();
-		this.name = name;
-		this.address = address;
-		this.phone = phone;
-		this.logo = logo;
-		this.servicioList = servicioList;
-		this.deleted = deleted;
-	}
+	}	
 	
 }

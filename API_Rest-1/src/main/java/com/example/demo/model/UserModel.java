@@ -1,19 +1,30 @@
 package com.example.demo.model;
 
-import com.example.demo.entity.User;
-
 import lombok.Data;
 
-//Model
-
-public class UserModel extends User{
-
+@Data
+public class UserModel {
+	
 	private int id;
-	private String username;
-	private String password;
-	private int enabled;
-	private String role;
-	private String token;
-	
-	
+	private String email;
+	public UserModel(int id, String email) {
+		super();
+		this.id = id;
+		this.email = email;
+	}
+	public UserModel() {
+		super();
+	}
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
 }
