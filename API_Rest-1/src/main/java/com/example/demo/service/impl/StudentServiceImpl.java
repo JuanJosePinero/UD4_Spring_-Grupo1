@@ -1,30 +1,17 @@
 package com.example.demo.service.impl;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.User.UserBuilder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.entity.Business;
-import com.example.demo.entity.ProFamily;
 import com.example.demo.entity.Servicio;
 import com.example.demo.entity.Student;
 import com.example.demo.model.ServicioModel;
@@ -70,6 +57,12 @@ public class StudentServiceImpl implements StudentService, UserDetailsService {
 //	@Override
 //	public Student register(StudentModel studentModel) {
 //		
+//	}
+	
+//	@Override
+//	public Student getStudentByEmail(String email) {
+//	    return studentRepository.findByEmail(email)
+//	            .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
 //	}
 	
 	@Override

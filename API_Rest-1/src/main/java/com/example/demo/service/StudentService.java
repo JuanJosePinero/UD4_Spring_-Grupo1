@@ -23,6 +23,8 @@ public interface StudentService {
 	public List<ServicioModel> getAssignedServiceByStudentProfesionalFamily(int id);
 	
 	public StudentModel getStudentByName(String name);
+
+//	Student getStudentByEmail(String email);
 	
 //	public Student getStudentByUsername(String username);
 	

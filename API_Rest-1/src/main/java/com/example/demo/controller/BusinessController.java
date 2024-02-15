@@ -17,8 +17,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.example.demo.entity.Business;
+import com.example.demo.entity.ProFamily;
 import com.example.demo.model.ServicioModel;
 import com.example.demo.service.BusinessService;
 import com.example.demo.service.ProFamilyService;
@@ -26,7 +28,7 @@ import com.example.demo.service.ServicioService;
 import com.example.demo.service.StudentService;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/business")
 public class BusinessController {
 
 	@Autowired
@@ -48,9 +50,13 @@ public class BusinessController {
 	// Crear un nuevo servicio por parte de la empresa logueada
     @PostMapping("/servicios")
     public ResponseEntity<ServicioModel> createServicio(@RequestBody ServicioModel servicioModel) {
-    	Business business = getCurrentBusiness();
+        Business business = getCurrentBusiness();
+        
+        // Buscar ProFamily por ID
+        ProFamily proFamily = proFamilyService.findById(servicioModel.getProfesionalFamilyId().getId());
 
         servicioModel.setBusinessId(business);
+        servicioModel.setProfesionalFamilyId(proFamily);
         ServicioModel createdServicio = servicioService.addServicio(servicioModel);
 
         return new ResponseEntity<>(createdServicio, HttpStatus.CREATED);

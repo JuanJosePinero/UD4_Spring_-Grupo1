@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,15 +19,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.AuthenticationResponseDTO;
 import com.example.demo.entity.Student;
-import com.example.demo.entity.User;
-import com.example.demo.service.StudentService;
 import com.example.demo.service.UserService;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/api")
 public class UserController {
 	
 	@Autowired
@@ -34,7 +33,7 @@ public class UserController {
 	private UserService userService;
 
 	@PostMapping("/login")
-	public ResponseEntity<?> login(@RequestParam("email") String email, @RequestParam("password") String pwd) {
+    public ResponseEntity<?> login(@RequestParam("email") String email, @RequestParam("password") String pwd) {
 	    Student student = userService.login(email, pwd);
 	    if (student != null) {
 	        String token = getJWTToken(student);
@@ -43,11 +42,16 @@ public class UserController {
 	                student.getEmail(),
 	                student.getRole(),
 	                token);
+
 	        return ResponseEntity.ok(response);
+	        
 	    }
 	    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciales inválidas");
+	    
+	    
 	}
 
+	
 	
 	@PostMapping("/register")
 	public com.example.demo.entity.Student saveStudent(@RequestBody com.example.demo.model.StudentModel studentModel){
@@ -56,24 +60,22 @@ public class UserController {
 	}
 	
 	private String getJWTToken(Student student) {
-		String secretKey = "mySecretKey";
-		List<GrantedAuthority> grantedAuthorities = AuthorityUtils
-				.commaSeparatedStringToAuthorityList("ROLE_STUDENT");
-		
-		String token = Jwts
-				.builder()
-				.setId("softtekJWT")
-				.setSubject(student.getUsername())
-				.claim("authorities",
-						grantedAuthorities.stream()
-								.map(GrantedAuthority::getAuthority)
-								.collect(Collectors.toList()))
-				.setIssuedAt(new Date(System.currentTimeMillis()))
-				.setExpiration(new Date(System.currentTimeMillis() + 600000))
-				.signWith(SignatureAlgorithm.HS512,
-						secretKey.getBytes()).compact();
+	    String secretKey = "mySecretKey";
+	    List<GrantedAuthority> grantedAuthorities = AuthorityUtils
+	            .commaSeparatedStringToAuthorityList(student.getRole());
 
-		return "Bearer " + token;
+	    String token = Jwts
+	            .builder()
+	            .setId("softtekJWT")
+	            .setSubject(String.valueOf(student.getId()))
+	            .claim("authorities",
+	                    grantedAuthorities.stream()
+	                            .map(GrantedAuthority::getAuthority)
+	                            .collect(Collectors.toList()))
+	            .setIssuedAt(new Date(System.currentTimeMillis()))
+	            .setExpiration(new Date(System.currentTimeMillis() + 600000))
+	            .signWith(SignatureAlgorithm.HS512, secretKey.getBytes()).compact();
+	    return "Bearer " + token;
 	}
 	
 

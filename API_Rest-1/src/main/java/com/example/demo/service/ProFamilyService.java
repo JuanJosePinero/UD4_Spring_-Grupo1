@@ -15,7 +15,7 @@ public interface ProFamilyService {
 	
 	ProFamily addProFamily(ProFamilyModel proFamilyModel);
 	
-	ProFamily findById(int id);
+	ProFamily findById(int i);
 	
 	List<ProFamily>getAll();
 	
