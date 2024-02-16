@@ -75,16 +75,28 @@ public class BusinessController {
 
     // Recuperar un determinado servicio de la empresa logueada
     @GetMapping("/servicios/{servicioId}")
-    public ResponseEntity<ServicioModel> getServicioById(@PathVariable("servicioId") int servicioId) {
-    	Business business = getCurrentBusiness();
+    public ResponseEntity<ServicioDTO> getServicioById(@PathVariable("servicioId") int servicioId, HttpServletRequest request) {
+    	 Claims claims = getToken(request);
+         int alumnoId = (Integer) claims.get("userId");
+         System.out.println(alumnoId);
+         Business loggedBusiness = businessService.getBusinessByStudentId(alumnoId);
+         try {
+             List<ServicioDTO> servicios = servicioService.getServicesByBusinessId(loggedBusiness);
+             if (servicios.isEmpty()) {
+                 return null;
+             }
+             for (ServicioDTO s : servicios) {
+				if(s.getId() == servicioId) {
+					return ResponseEntity.ok(s);
+				}
+             }
+             
+         } catch (EntityNotFoundException e) {
+     		return null;
+         }
+ 		return null;
 
-        ServicioModel servicio = servicioService.getServicioById(servicioId);
-        if (servicio != null && servicio.getBusinessId().getId() == business.getId()) {
-            return new ResponseEntity<>(servicio, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
+     }
     
     // Recuperar todos los servicios de la empresa logueada    
     @GetMapping("/servicios")
