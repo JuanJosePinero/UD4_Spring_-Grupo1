@@ -156,17 +156,17 @@ public class ServicioServiceImpl implements ServicioService {
 	}
 
 	@Override
-	public List<ServicioModel> getServicesByBusinessId(Business business) {
-		List<Servicio>modelServices=servicioRepository.findAll();
-		List<ServicioModel>services=new ArrayList<>();
-		for(Servicio servicio: modelServices) {
+	public List<ServicioDTO> getServicesByBusinessId(Business business) {
+		ServicioConverter converter = new ServicioConverter();
+
+		List<Servicio> servicios =servicioRepository.findAll();
+		List<ServicioDTO> servicesDTO = new ArrayList<>();
+		for(Servicio servicio: servicios) {
 			if(servicio.getBusinessId()!=null && servicio.getBusinessId().getId() == business.getId()) {
-			ServicioModel servicioModel = entity2model(servicio);
-			services.add(servicioModel);
+				servicesDTO.add(converter.transform(servicio));
 			}
 		}
-		
-		return services;
+		return servicesDTO;
 		
 	}
 

@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.dto.ServicioDTO;
 import com.example.demo.entity.Business;
 import com.example.demo.entity.ProFamily;
 import com.example.demo.model.ServicioModel;
@@ -85,8 +86,7 @@ public class BusinessController {
         }
     }
     
-    // Recuperar todos los servicios de la empresa logueada
-    
+    // Recuperar todos los servicios de la empresa logueada    
     @GetMapping("/servicios")
     public ResponseEntity<?> getAllServicios(HttpServletRequest request) {
         Claims claims = getToken(request);
@@ -94,24 +94,16 @@ public class BusinessController {
         System.out.println(alumnoId);
         Business loggedBusiness = businessService.getBusinessByStudentId(alumnoId);
         try {
-            List<ServicioModel> ServicioModel = servicioService.getServicesByBusinessId(loggedBusiness);
-            if (ServicioModel.isEmpty()) {
+            List<ServicioDTO> servicioDTO = servicioService.getServicesByBusinessId(loggedBusiness);
+            if (servicioDTO.isEmpty()) {
                 return null;
-                		}
-            return ResponseEntity.ok(ServicioModel);
+            }
+            return ResponseEntity.ok(servicioDTO);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Alumno no encontrado con ID: " + alumnoId);
         }
     }
-//    @GetMapping("/servicios")
-//    public ResponseEntity<List<ServicioModel>> getAllServicios() {
-//    	Business business = getCurrentBusiness();
-//    	System.out.println(business);
-//
-//        List<ServicioModel> servicios = servicioService.getServicesByBusinessId(business);
-//        return new ResponseEntity<>(servicios, HttpStatus.OK);
-//    }
-
+    
     // Actualizar un servicio de la empresa logueada
     @PutMapping("/servicios/{servicioId}")
     public ResponseEntity<ServicioModel> updateServicio(@PathVariable("servicioId") int servicioId,

@@ -20,10 +20,6 @@ public class ServicioDTO {
 	private String description;
 	private Date registerDate;
 	private Date happeningDate;
-	@Nullable
-	private Student studentId;
-	private Business businessId;
-	private ProFamily profesionalFamilyId;
 	private int finished;
 	private String comment;
 }

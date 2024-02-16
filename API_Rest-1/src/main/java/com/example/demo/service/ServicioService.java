@@ -1,14 +1,10 @@
 package com.example.demo.service;
 
-import java.util.Date;
 import java.util.List;
 
 import com.example.demo.dto.ServicioDTO;
 import com.example.demo.entity.Business;
 import com.example.demo.entity.ProFamily;
-//import com.example.demo.entity.Report;
-import com.example.demo.entity.Servicio;
-import com.example.demo.entity.Student;
 import com.example.demo.model.ServicioModel;
 
 public interface ServicioService {
@@ -21,7 +17,7 @@ public interface ServicioService {
 	
 	ServicioModel getServicioById(int serviceId);
 	
-	public List<ServicioModel>getServicesByBusinessId(Business business);
+	public List<ServicioDTO> getServicesByBusinessId(Business business);
 	
 	List<ServicioModel> findServiciosByProFamily(String familyName);
 	
