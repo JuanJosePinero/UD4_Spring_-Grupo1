@@ -6,13 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.dto.ServicioDTO;
 import com.example.demo.model.ServicioModel;
 import com.example.demo.service.ServicioService;
 import com.example.demo.service.StudentService;
@@ -37,7 +36,7 @@ public class StudentController {
 //	}
 	
 	@GetMapping("/viewServices")
-	public ResponseEntity<List<ServicioModel>> viewServices() {
+	public ResponseEntity<List<ServicioDTO>> viewServices() {
 	   /* if (authentication == null) {
 	        return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 	    }*/
@@ -45,10 +44,8 @@ public class StudentController {
 	    try {
 //	        Integer studentId = Integer.parseInt(authentication.getName());
 
-	        List<ServicioModel> serviceList = studentService.getServiceByStudentProfesionalFamily(1);
-	        for (ServicioModel s : serviceList) {
-				System.out.println(s);
-			}
+	        List<ServicioDTO> serviceList = studentService.getServiceByStudentProfesionalFamily(1);
+	        
 	        return new ResponseEntity<>(serviceList, HttpStatus.OK);
 	    } catch (Exception e) {
 	        return new ResponseEntity<>(HttpStatus.FORBIDDEN);

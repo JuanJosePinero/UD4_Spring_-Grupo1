@@ -12,6 +12,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.converter.ServicioConverter;
+import com.example.demo.converter.StudentConverter;
+import com.example.demo.dto.ServicioDTO;
 import com.example.demo.entity.Servicio;
 import com.example.demo.entity.Student;
 import com.example.demo.model.ServicioModel;
@@ -40,6 +43,14 @@ public class StudentServiceImpl implements StudentService, UserDetailsService {
 	@Autowired
 	@Qualifier("servicioService")
 	private ServicioServiceImpl servicioService;
+	
+	@Autowired
+	@Qualifier("studentConverter")
+	private StudentConverter studentConverter;
+	
+	@Autowired
+	@Qualifier("servicioConverter")
+	private ServicioConverter servicioConverter;
 
 	public Student model2entity(StudentModel studentModel) {
 		ModelMapper mapper = new ModelMapper();
@@ -89,15 +100,10 @@ public class StudentServiceImpl implements StudentService, UserDetailsService {
 //--------------------------------------------------------------------------------------------------------------------------------------------------------
 //	Alumnos: recuperan todos los servicios correspondientes a su familia profesional.
 	@Override
-	public List<ServicioModel> getServiceByStudentProfesionalFamily(int id) {
-		Student student=studentRepository.findById(id);
-		List<ServicioModel>servicioLista=new ArrayList<>();
-		List<Servicio>services=servicioRepository.findByProfesionalFamilyId(student.getProfesionalFamily());
-		for(Servicio servicio: services) {
-			servicioLista.add(servicioService.entity2model(servicio));
-		}
-
-		return servicioLista;
+	public List<ServicioDTO> getServiceByStudentProfesionalFamily(int id) {
+	    Student student = studentRepository.findById(id);
+	    List<Servicio> servicios = servicioRepository.findByProfesionalFamilyId(student.getProfesionalFamily());
+	    return servicioConverter.transform2DTO(servicios);
 	}
 //--------------------------------------------------------------------------------------------------------------------------------------------------------
 	

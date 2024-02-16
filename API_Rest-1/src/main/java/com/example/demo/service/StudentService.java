@@ -3,6 +3,7 @@ package com.example.demo.service;
 import java.util.List;
 import java.util.Map;
 
+import com.example.demo.dto.ServicioDTO;
 import com.example.demo.entity.ProFamily;
 import com.example.demo.entity.Student;
 import com.example.demo.model.ServicioModel;
@@ -18,7 +19,7 @@ public interface StudentService {
 	
 	public StudentModel entity2model(Student student);
 	
-	public List<ServicioModel> getServiceByStudentProfesionalFamily(int id);
+	public List<ServicioDTO> getServiceByStudentProfesionalFamily(int id);
 	public List<ServicioModel> getUnassignedServiceByStudentProfesionalFamily(int id);
 	public List<ServicioModel> getAssignedServiceByStudentProfesionalFamily(int id);
 	
