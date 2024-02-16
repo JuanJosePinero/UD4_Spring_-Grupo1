@@ -5,6 +5,7 @@ import java.util.List;
 import com.example.demo.dto.ServicioDTO;
 import com.example.demo.entity.Business;
 import com.example.demo.entity.ProFamily;
+import com.example.demo.entity.Servicio;
 import com.example.demo.model.ServicioModel;
 
 public interface ServicioService {
@@ -13,7 +14,7 @@ public interface ServicioService {
 	
 	int deleteServicio(int id);
 	
-	ServicioModel updateServicio(ServicioModel servicioModel);
+	Servicio updateServicio(ServicioModel servicio);
 	
 	ServicioModel getServicioById(int serviceId);
 	

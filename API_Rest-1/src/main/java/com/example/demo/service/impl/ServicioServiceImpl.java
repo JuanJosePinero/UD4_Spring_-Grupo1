@@ -108,24 +108,40 @@ public class ServicioServiceImpl implements ServicioService {
 	}
 
 	@Override
-	public ServicioModel updateServicio(ServicioModel servicioModel) {
-	    ServicioModel updatedServicio = null;
+	public Servicio updateServicio(ServicioModel servicioModel) {
 	    Servicio servicio = servicioRepository.findById(servicioModel.getId());
 
-	    if (servicio != null && servicio.getBusinessId().getId() == servicioModel.getBusinessId().getId()) {
-	        servicio.setTitle(servicioModel.getTitle());
-	        servicio.setDescription(servicioModel.getDescription());
-	        servicio.setHappeningDate(servicioModel.getHappeningDate());
-	        servicio.setRegisterDate(servicioModel.getRegisterDate());
-	        servicio.setProfesionalFamilyId(servicioModel.getProfesionalFamilyId());
-	        servicio.setStudentId(servicioModel.getStudentId());
+	    if (servicio != null) {
+	        if (servicioModel.getTitle() != null) {
+	            servicio.setTitle(servicioModel.getTitle());
+	        }
+
+	        if (servicioModel.getDescription() != null) {
+	            servicio.setDescription(servicioModel.getDescription());
+	        }
+
+	        if (servicioModel.getRegisterDate() != null) {
+	            servicio.setRegisterDate(servicioModel.getRegisterDate());
+	        }
+
+	        // Considera -1 como un valor que indica que el campo no debe actualizarse
+	        if (servicioModel.getFinished() != -1 || servicioModel.getFinished() != 0 || servicioModel.getFinished() != 1 ) {
+	            servicio.setFinished(servicioModel.getFinished());
+	        }
+
+	        if (servicioModel.getComment() != null) {
+	            servicio.setComment(servicioModel.getComment());
+	        }
+
+	        // Considera -1 como un valor que indica que el campo no debe actualizarse
+	        if (servicioModel.getValoration() != -1 || servicioModel.getValoration() > 10 || servicioModel.getValoration() < 0) {
+	            servicio.setValoration(servicioModel.getValoration());
+	        }
 
 	        servicio = servicioRepository.save(servicio);
-
-	        updatedServicio = entity2model(servicio);
 	    }
 
-	    return updatedServicio;
+	    return servicio;
 	}
 
 

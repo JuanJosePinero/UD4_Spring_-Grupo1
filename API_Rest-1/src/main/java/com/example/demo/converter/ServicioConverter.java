@@ -7,9 +7,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
 import com.example.demo.dto.ServicioDTO;
-import com.example.demo.dto.StudentDTO;
 import com.example.demo.entity.Servicio;
-import com.example.demo.entity.Student;
 
 @Component("servicioConverter")
 public class ServicioConverter {

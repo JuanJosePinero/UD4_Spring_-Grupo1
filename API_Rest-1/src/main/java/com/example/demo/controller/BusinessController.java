@@ -19,9 +19,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.converter.ServicioConverter;
 import com.example.demo.dto.ServicioDTO;
 import com.example.demo.entity.Business;
 import com.example.demo.entity.ProFamily;
+import com.example.demo.entity.Servicio;
 import com.example.demo.model.ServicioModel;
 import com.example.demo.service.BusinessService;
 import com.example.demo.service.ProFamilyService;
@@ -103,7 +105,6 @@ public class BusinessController {
     public ResponseEntity<?> getAllServicios(HttpServletRequest request) {
         Claims claims = getToken(request);
         int alumnoId = (Integer) claims.get("userId");
-        System.out.println(alumnoId);
         Business loggedBusiness = businessService.getBusinessByStudentId(alumnoId);
         try {
             List<ServicioDTO> servicioDTO = servicioService.getServicesByBusinessId(loggedBusiness);
@@ -118,14 +119,21 @@ public class BusinessController {
     
     // Actualizar un servicio de la empresa logueada
     @PutMapping("/servicios/{servicioId}")
-    public ResponseEntity<ServicioModel> updateServicio(@PathVariable("servicioId") int servicioId,
-                                                         @RequestBody ServicioModel servicioModel) {
-    	Business business = getCurrentBusiness();
-
-        servicioModel.setId(servicioId);
-        ServicioModel updatedServicio = servicioService.updateServicio(servicioModel);
-        if (updatedServicio != null && updatedServicio.getBusinessId().getId() == business.getId()) {
-            return new ResponseEntity<>(updatedServicio, HttpStatus.OK);
+    public ResponseEntity<ServicioDTO> updateServicio(@PathVariable("servicioId") int servicioId,
+                                                         @RequestBody ServicioModel servicio, HttpServletRequest request) {
+    	Claims claims = getToken(request);
+        int alumnoId = (Integer) claims.get("userId");
+        System.out.println(alumnoId);
+        Business loggedBusiness = businessService.getBusinessByStudentId(alumnoId);
+        
+        
+        if(loggedBusiness.getId() == servicioService.getServicioById(servicioId).getBusinessId().getId()) {
+        	//Aunque el usuario meta un id distinto en el modelo, no cambiará gracias a esto. Control de errores 
+        	servicio.setId(servicioId);
+            Servicio updatedServicio = servicioService.updateServicio(servicio);
+            ServicioConverter serviceConverter = new ServicioConverter();	
+            ServicioDTO serviceDTO = serviceConverter.transform(updatedServicio);
+            return new ResponseEntity<>(serviceDTO, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
