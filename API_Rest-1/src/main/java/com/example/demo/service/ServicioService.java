@@ -3,6 +3,7 @@ package com.example.demo.service;
 import java.util.Date;
 import java.util.List;
 
+import com.example.demo.dto.ServicioDTO;
 import com.example.demo.entity.Business;
 import com.example.demo.entity.ProFamily;
 //import com.example.demo.entity.Report;
@@ -27,6 +28,8 @@ public interface ServicioService {
 	List<ServicioModel> getAllServicios();
 	
 	List<ServicioModel> getFilteredServices(String opcion, String filterBy);
+	
+	List<ServicioDTO>getServicesByBusinessIdAndProFamily(Business business,ProFamily profam);
 
 	
 //	Servicio rateServicio(int servicioId, float valoration);

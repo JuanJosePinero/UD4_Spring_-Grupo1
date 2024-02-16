@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.converter.ServicioConverter;
+import com.example.demo.dto.ServicioDTO;
 import com.example.demo.entity.Business;
 import com.example.demo.entity.ProFamily;
 //import com.example.demo.entity.Report;
@@ -36,6 +38,9 @@ public class ServicioServiceImpl implements ServicioService {
     
     @Autowired
     private ProFamilyService proFamilyService;
+    
+    @Autowired
+    private ServicioConverter servicioConverter;
 
     public ServicioServiceImpl(ServicioRepository servicioRepository) {
         this.servicioRepository = servicioRepository;
@@ -178,5 +183,11 @@ public class ServicioServiceImpl implements ServicioService {
 		}
 		Collections.sort(reports, Comparator.comparing(ProFamily::getName));
 		return reports;
+	}
+
+	@Override
+	public List<ServicioDTO> getServicesByBusinessIdAndProFamily(Business business, ProFamily profam) {
+		List<Servicio> servicios = servicioRepository.findByBusinessIdAndProfesionalFamilyId(business, profam);
+		return servicioConverter.transform2DTO(servicios);
 	}
 }

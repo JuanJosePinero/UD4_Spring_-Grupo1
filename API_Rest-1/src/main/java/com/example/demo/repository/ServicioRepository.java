@@ -28,5 +28,5 @@ public interface ServicioRepository  extends JpaRepository<Servicio, Serializabl
 	List<Servicio> findByFinishedAndStudentId(int finished, Student studentId);
 	public abstract List<Servicio> findByValorationIsNotNullAndBusinessIdAndProfesionalFamilyId(Business businessId, ProFamily proFamilyId);
 	public abstract List<Servicio>findByHappeningDateBetween(Date registerDateBegin,Date registerDateEnd);
-
+	List<Servicio> findByBusinessIdAndProfesionalFamilyId(Business businessId,ProFamily proFamily);
 }
