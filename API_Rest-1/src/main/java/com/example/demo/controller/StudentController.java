@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,22 +36,29 @@ public class StudentController {
 //		return new ResponseEntity<>(serviceList, HttpStatus.OK);
 //	}
 	
-	@GetMapping("/viewServices")
-	public ResponseEntity<List<ServicioDTO>> viewServices() {
-	   /* if (authentication == null) {
-	        return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-	    }*/
-
+	@GetMapping("/viewServices/{profesionalFamilyId}")
+	public ResponseEntity<List<ServicioDTO>> viewServices(@PathVariable(name = "profesionalFamilyId", required = false) Integer profesionalFamilyId, @RequestParam(name = "page", defaultValue = "0") int page, @RequestParam(name = "size", defaultValue = "10") int size) {
+	    if (profesionalFamilyId == null) {
+	        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	    }
+	    
 	    try {
-//	        Integer studentId = Integer.parseInt(authentication.getName());
-
-	        List<ServicioDTO> serviceList = studentService.getServiceByStudentProfesionalFamily(1);
+	        List<ServicioDTO> serviceList = studentService.getServiceByStudentProfesionalFamily(profesionalFamilyId);
 	        
-	        return new ResponseEntity<>(serviceList, HttpStatus.OK);
+	        // Aplicar paginación
+	        int startIndex = page * size;
+	        int endIndex = Math.min(startIndex + size, serviceList.size());
+	        List<ServicioDTO> paginatedServiceList = serviceList.subList(startIndex, endIndex);
+	        
+	        return new ResponseEntity<>(paginatedServiceList, HttpStatus.OK);
 	    } catch (Exception e) {
-	        return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+	        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	    }
 	}
+
+
+
+
 
 	
 	@GetMapping("/viewServicesAssigned")
