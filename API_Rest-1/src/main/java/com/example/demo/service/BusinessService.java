@@ -25,4 +25,8 @@ public interface BusinessService {
 	
 	public Business getIdByUsername(String username);
 	
+	public Business getBusinessByStudentId(int id);
+	
+	public Business getBusinessByEmail(String email);
+	
 }

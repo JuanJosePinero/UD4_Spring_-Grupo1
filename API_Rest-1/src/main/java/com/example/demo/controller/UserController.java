@@ -10,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.AuthenticationResponseDTO;
 import com.example.demo.entity.Student;
+import com.example.demo.entity.User;
 import com.example.demo.service.UserService;
 
 import io.jsonwebtoken.Jwts;
@@ -56,26 +56,28 @@ public class UserController {
 	@PostMapping("/register")
 	public com.example.demo.entity.Student saveStudent(@RequestBody com.example.demo.model.StudentModel studentModel){
 		return userService.register(studentModel);
-		
 	}
 	
-	private String getJWTToken(Student student) {
-	    String secretKey = "mySecretKey";
-	    List<GrantedAuthority> grantedAuthorities = AuthorityUtils
-	            .commaSeparatedStringToAuthorityList(student.getRole());
+	private String getJWTToken(Student usuario) {
+		String secretKey = "mySecretKey";
+		List<GrantedAuthority> grantedAuthorities = AuthorityUtils
+				.commaSeparatedStringToAuthorityList(usuario.getRole());
 
-	    String token = Jwts
-	            .builder()
-	            .setId("softtekJWT")
-	            .setSubject(String.valueOf(student.getId()))
-	            .claim("authorities",
-	                    grantedAuthorities.stream()
-	                            .map(GrantedAuthority::getAuthority)
-	                            .collect(Collectors.toList()))
-	            .setIssuedAt(new Date(System.currentTimeMillis()))
-	            .setExpiration(new Date(System.currentTimeMillis() + 600000))
-	            .signWith(SignatureAlgorithm.HS512, secretKey.getBytes()).compact();
-	    return "Bearer " + token;
+		String token = Jwts.builder()
+				.setId("softtekJWT")
+				.setSubject(usuario.getEmail())
+				.claim("userId", usuario.getId())
+				.claim("authorities", grantedAuthorities.stream()
+						.map(GrantedAuthority::getAuthority)
+						.collect(Collectors.toList()))
+				.setIssuedAt(new Date(System.currentTimeMillis()))
+				.setExpiration(new Date(System.currentTimeMillis() + 6000000))// Tiempo de caducidad del token aumentada
+																				// durante desarrollo. Disminuir si
+																				// fuese neceario.
+				.signWith(SignatureAlgorithm.HS512, secretKey.getBytes())
+				.compact();
+
+		return "Bearer " + token;
 	}
 	
 

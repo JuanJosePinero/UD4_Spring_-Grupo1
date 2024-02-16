@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 
 import com.example.demo.entity.Business;
 import com.example.demo.entity.ProFamily;
@@ -26,6 +26,11 @@ import com.example.demo.service.BusinessService;
 import com.example.demo.service.ProFamilyService;
 import com.example.demo.service.ServicioService;
 import com.example.demo.service.StudentService;
+
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/business")
@@ -46,6 +51,11 @@ public class BusinessController {
 	@Autowired
 	@Qualifier("proFamilyService")
 	 private ProFamilyService proFamilyService;
+	
+	private final String HEADER = "Authorization";
+    private final String PREFIX = "Bearer ";
+    private final String SECRET = "mySecretKey";
+
 	
 	// Crear un nuevo servicio por parte de la empresa logueada
     @PostMapping("/servicios")
@@ -74,15 +84,33 @@ public class BusinessController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-
+    
     // Recuperar todos los servicios de la empresa logueada
+    
     @GetMapping("/servicios")
-    public ResponseEntity<List<ServicioModel>> getAllServicios() {
-    	Business business = getCurrentBusiness();
-
-        List<ServicioModel> servicios = servicioService.getServicesByBusinessId(business);
-        return new ResponseEntity<>(servicios, HttpStatus.OK);
+    public ResponseEntity<?> getAllServicios(HttpServletRequest request) {
+        Claims claims = getToken(request);
+        int alumnoId = (Integer) claims.get("userId");
+        System.out.println(alumnoId);
+        Business loggedBusiness = businessService.getBusinessByStudentId(alumnoId);
+        try {
+            List<ServicioModel> ServicioModel = servicioService.getServicesByBusinessId(loggedBusiness);
+            if (ServicioModel.isEmpty()) {
+                return null;
+                		}
+            return ResponseEntity.ok(ServicioModel);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Alumno no encontrado con ID: " + alumnoId);
+        }
     }
+//    @GetMapping("/servicios")
+//    public ResponseEntity<List<ServicioModel>> getAllServicios() {
+//    	Business business = getCurrentBusiness();
+//    	System.out.println(business);
+//
+//        List<ServicioModel> servicios = servicioService.getServicesByBusinessId(business);
+//        return new ResponseEntity<>(servicios, HttpStatus.OK);
+//    }
 
     // Actualizar un servicio de la empresa logueada
     @PutMapping("/servicios/{servicioId}")
@@ -125,9 +153,23 @@ public class BusinessController {
     }
     
     private Business getCurrentBusiness() {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String username = ((UserDetails) principal).getUsername();
+    	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    	Object principal = authentication.getPrincipal();
+    	UserDetails userDetails = null;
+    	if (principal instanceof UserDetails) {
+    	    userDetails = (UserDetails) principal;
+    	    // Utiliza userDetails aquí
+    	} else {
+    		System.out.println("Hola");
+    		return null;
+    	}
+        
+        String username = ((UserDetails) userDetails).getUsername();
         return businessService.getIdByUsername(username);
     }
 
+    private Claims getToken(HttpServletRequest request) {
+        String jwtToken = request.getHeader(HEADER).replace(PREFIX, "");
+        return Jwts.parser().setSigningKey(SECRET.getBytes()).parseClaimsJws(jwtToken).getBody();
+    }
 }
