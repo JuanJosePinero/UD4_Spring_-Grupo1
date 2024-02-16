@@ -12,7 +12,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.ServicioDTO;
+import com.example.demo.entity.ProFamily;
+import com.example.demo.entity.Student;
 import com.example.demo.model.ServicioModel;
+import com.example.demo.service.ProFamilyService;
 import com.example.demo.service.ServicioService;
 import com.example.demo.service.StudentService;
 
@@ -32,6 +35,10 @@ public class StudentController {
 	@Qualifier("studentService")
 	private StudentService studentService;
 	
+	@Autowired
+	@Qualifier("proFamilyService")
+	private ProFamilyService proFamilyService;
+	
 	private final String HEADER = "Authorization";
     private final String PREFIX = "Bearer ";
     private final String SECRET = "mySecretKey";
@@ -46,13 +53,9 @@ public class StudentController {
 	public ResponseEntity<List<ServicioDTO>> viewServices(HttpServletRequest request) {
 	    // Aquí implementa la lógica para obtener el ID de la familia profesional
 		Claims claims = getToken(request);
-        int alumnoId = (Integer) claims.get("profesionalFamilyId");
-	    Integer profesionalFamilyId = alumnoId;
-
-	    try {
-	        System.out.println("FAM ID: " + profesionalFamilyId);
-	        List<ServicioDTO> serviceList = studentService.getServiceByStudentProfesionalFamily(profesionalFamilyId);
-	        System.out.println("Que se ve: " + serviceList);
+        int alumnoId = (Integer) claims.get("userId");
+        try {
+	        List<ServicioDTO> serviceList = studentService.getServiceByStudentProfesionalFamily(alumnoId);
 	      
 	        return new ResponseEntity<>(serviceList, HttpStatus.OK);
 	    } catch (Exception e) {

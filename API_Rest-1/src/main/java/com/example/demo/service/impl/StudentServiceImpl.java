@@ -92,16 +92,16 @@ public class StudentServiceImpl implements StudentService, UserDetailsService {
 	}
 
 	@Override
-	public StudentModel getStudentById(int id) {
+	public Student getStudentById(int id) {
 		Student student = studentRepository.findById(id);
-		return entity2model(student);
+		return student;
 	}
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------
 //	Alumnos: recuperan todos los servicios correspondientes a su familia profesional.
 	@Override
 	public List<ServicioDTO> getServiceByStudentProfesionalFamily(int id) {
-	    Student student = studentRepository.findById(id);
+	    Student student = getStudentById(id);
 	    List<Servicio> servicios = servicioRepository.findByProfesionalFamilyId(student.getProfesionalFamily());
 	    return servicioConverter.transform2DTO(servicios);
 	}

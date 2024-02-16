@@ -13,7 +13,7 @@ public interface StudentService {
 
 	List<Student> listAllStudents();
 
-	StudentModel getStudentById(int id);
+	Student getStudentById(int id);
 	
 	Student model2entity(StudentModel studentModel);
 	
