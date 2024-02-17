@@ -51,7 +51,6 @@ public class StudentController {
 	
 	@GetMapping("/viewServices")
 	public ResponseEntity<List<ServicioDTO>> viewServices(HttpServletRequest request) {
-	    // Aquí implementa la lógica para obtener el ID de la familia profesional
 		Claims claims = getToken(request);
         int alumnoId = (Integer) claims.get("userId");
         try {
@@ -63,24 +62,23 @@ public class StudentController {
 	    }
 	}
 
-
-
-
-
-	
 	@GetMapping("/viewServicesAssigned")
-    public ResponseEntity<List<ServicioModel>> viewAssignedServices(@RequestParam("studentId") int studentId) {
-
-        List<ServicioModel> serviceList = studentService.getAssignedServiceByStudentProfesionalFamily(studentId);
+    public ResponseEntity<List<ServicioDTO>> viewAssignedServices(HttpServletRequest request) {
+		Claims claims = getToken(request);
+        int alumnoId = (Integer) claims.get("userId");
+		
+        List<ServicioDTO> serviceList = studentService.getAssignedServiceByStudentProfesionalFamily(alumnoId);
         return new ResponseEntity<>(serviceList, HttpStatus.OK);
     }
     
     @GetMapping("/viewServicesUnassigned")
-    public ResponseEntity<List<ServicioModel>> viewUnassignedServices(@RequestParam("studentId") int studentId) {
-
-        List<ServicioModel> serviceList = studentService.getUnassignedServiceByStudentProfesionalFamily(studentId);
+    public ResponseEntity<List<ServicioDTO>> viewUnassignedServices(HttpServletRequest request) {
+    	Claims claims = getToken(request);
+        int alumnoId = (Integer) claims.get("userId");
+        List<ServicioDTO> serviceList = studentService.getUnassignedServiceByStudentProfesionalFamily(alumnoId);
         return new ResponseEntity<>(serviceList, HttpStatus.OK);
     }
+    
     
     private Claims getToken(HttpServletRequest request) {
         String jwtToken = request.getHeader(HEADER).replace(PREFIX, "");

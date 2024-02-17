@@ -15,21 +15,10 @@ public interface StudentService {
 
 	Student getStudentById(int id);
 	
-	Student model2entity(StudentModel studentModel);
-	
-	public StudentModel entity2model(Student student);
-	
+	Student getStudentByName(String name);
+
 	public List<ServicioDTO> getServiceByStudentProfesionalFamily(int id);
-	public List<ServicioModel> getUnassignedServiceByStudentProfesionalFamily(int id);
-	public List<ServicioModel> getAssignedServiceByStudentProfesionalFamily(int id);
+	public List<ServicioDTO> getUnassignedServiceByStudentProfesionalFamily(int id);
+	public List<ServicioDTO> getAssignedServiceByStudentProfesionalFamily(int id);
 	
-	public StudentModel getStudentByName(String name);
-
-//	Student getStudentByEmail(String email);
-	
-//	public Student getStudentByUsername(String username);
-	
-	
- 
-
 }

@@ -56,30 +56,11 @@ public class StudentServiceImpl implements StudentService, UserDetailsService {
 		ModelMapper mapper = new ModelMapper();
 		return mapper.map(studentModel, Student.class);
 	}
-//	@Override
-//	public StudentModel entity2model(Student student) {
-//	    ModelMapper mapper = new ModelMapper();
-//	    mapper.createTypeMap(Student.class, StudentModel.class)
-//	            .addMapping(src -> ((Student) src).getEnabled(), StudentModel::setEnabled);
-//	    StudentModel studentModel = mapper.map(student, StudentModel.class);
-//	    return studentModel;
-//	}
-	
-//	@Override
-//	public Student register(StudentModel studentModel) {
-//		
-//	}
-	
-//	@Override
-//	public Student getStudentByEmail(String email) {
-//	    return studentRepository.findByEmail(email)
-//	            .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
-//	}
 	
 	@Override
-	public StudentModel getStudentByName(String name) {
+	public Student getStudentByName(String name) {
 		Student student=studentRepository.findByName(name);
-		return entity2model(student);
+		return student;
 	}
 
 	@Override
@@ -110,31 +91,40 @@ public class StudentServiceImpl implements StudentService, UserDetailsService {
 //--------------------------------------------------------------------------------------------------------------------------------------------------------
 //	Alumnos: recuperan todos los servicios correspondientes a su familia profesional, que tiene asignados
 	@Override
-	public List<ServicioModel> getAssignedServiceByStudentProfesionalFamily(int id) {
-		Student student=studentRepository.findById(id);
-		List<ServicioModel>servicioLista=new ArrayList<>();
-		List<Servicio>services=servicioRepository.findByProfesionalFamilyId(student.getProfesionalFamily());
-		for(Servicio s: services) {
-			if(s.getStudentId().getId() == student.getId())
-				servicioLista.add(servicioService.entity2model(s));
-		}
+	public List<ServicioDTO> getAssignedServiceByStudentProfesionalFamily(int id) {
+	    Student student = studentRepository.findById(id);
+	    List<Servicio> servicioLista = new ArrayList<>();
 
-		return servicioLista;
+	    // Verificar si el estudiante existe y tiene una familia profesional asignada
+	    if (student != null && student.getProfesionalFamily() != null) {
+	        List<Servicio> services = servicioRepository.findByProfesionalFamilyId(student.getProfesionalFamily());
+	        for (Servicio s : services) {
+	            // Verificar si el servicio tiene un estudiante asignado y si coincide con el id del estudiante
+	            if (s.getStudentId() != null && s.getStudentId().getId() == student.getId()) {
+	                servicioLista.add(s);
+	            }
+	        }
+	    } else {
+	        return null;
+	    }
+
+	    return servicioConverter.transform2DTO(servicioLista);
 	}
+
 //--------------------------------------------------------------------------------------------------------------------------------------------------------
 	
 //--------------------------------------------------------------------------------------------------------------------------------------------------------
 //	Alumnos: recuperan todos los servicios correspondientes a su familia profesional, que no tienen asignados ningún alumno
 	@Override
-	public List<ServicioModel> getUnassignedServiceByStudentProfesionalFamily(int id) {
+	public List<ServicioDTO> getUnassignedServiceByStudentProfesionalFamily(int id) {
 		Student student=studentRepository.findById(id);
-		List<ServicioModel>servicioLista=new ArrayList<>();
+		List<Servicio>servicioLista=new ArrayList<>();
 		List<Servicio>services=servicioRepository.findByProfesionalFamilyId(student.getProfesionalFamily());
 		for(Servicio s: services) {
 			if(s.getStudentId() == null)
-			servicioLista.add(servicioService.entity2model(s));
+				servicioLista.add(s);
 		}
-		return servicioLista;
+		return servicioConverter.transform2DTO(servicioLista);
 	}
 //--------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -144,64 +134,4 @@ public class StudentServiceImpl implements StudentService, UserDetailsService {
 		return null;
 	}
 
-	@Override
-	public StudentModel entity2model(Student student) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-//	@Override
-//	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-//		com.example.demo.entity.Student student = studentRepository.findByUsername(username);
-//		UserBuilder builder = null;
-//		
-//		if (student != null) {
-//			if (student.getEnabled() == 0) {
-//				return User.withUsername(student.getName())
-//	                    .disabled(true)
-//	                    .password(student.getPassword())
-//	                    .authorities(new SimpleGrantedAuthority(student.getRole()))
-//	                    .build();
-//	        
-//	        }
-//			builder = User.withUsername(student.getName());
-//			builder.disabled(false);
-//			builder.password(student.getPassword());
-//			builder.authorities(new SimpleGrantedAuthority(student.getRole()));
-//		} else
-//			throw new UsernameNotFoundException("Student not found or account is not activated");
-//		return builder.build();
-//	}
-
-
-//	@Bean
-//	PasswordEncoder passwordEncoder() {
-//		return new BCryptPasswordEncoder();
-//	}
-	
-//	@Override
-//	public Student getStudentByUsername(String username) {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
-	
-//	
-//	
-//	public UserDetails loadUserByEmail(String email) throws UsernameNotFoundException {
-//		com.example.demo.entity.Student student = studentRepository.findByUsername(email);
-//		UserBuilder builder = null;
-//
-//		if (student != null) {
-//			builder = User.withUsername(email);
-//			builder.disabled(false);
-//			builder.password(student.getPassword());
-//			builder.authorities(new SimpleGrantedAuthority(student.getRole()));
-//		} else
-//			throw new UsernameNotFoundException("Student not found");
-//		return builder.build();
-//	}
-	
 }
-
-
-

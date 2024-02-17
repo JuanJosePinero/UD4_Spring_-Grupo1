@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -117,6 +118,29 @@ public class BusinessController {
         }
     }
     
+ // Recuperar todos los servicios de la empresa logueada filtrando por familia profesional
+    @GetMapping("/servicios/proFam/{proFamilyId}")
+    public ResponseEntity<?> getServiciosByProFamily(HttpServletRequest request, @PathVariable("proFamilyId") int proFamilyId) {
+        Claims claims = getToken(request);
+        int alumnoId = (Integer) claims.get("userId");
+        Business loggedBusiness = businessService.getBusinessByStudentId(alumnoId);
+        try {
+            List<ServicioDTO> serviciosDTO = servicioService.getServicesByBusinessId(loggedBusiness);
+            if (serviciosDTO.isEmpty()) {
+                return null;
+            }
+            List<ServicioDTO> servicioDTO = new ArrayList<>();
+            for (ServicioDTO s : serviciosDTO) {
+            	if(s.getProfesionalFamilyId().getId() == proFamilyId)
+            		servicioDTO.add(s);
+            		
+			}
+            return ResponseEntity.ok(servicioDTO);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Alumno no encontrado con ID: " + alumnoId);
+        }
+    }
+    
     // Actualizar un servicio de la empresa logueada
     @PutMapping("/servicios/{servicioId}")
     public ResponseEntity<ServicioDTO> updateServicio(@PathVariable("servicioId") int servicioId,
@@ -141,15 +165,20 @@ public class BusinessController {
 
     // Eliminar un servicio de la empresa logueada
     @DeleteMapping("/servicios/{servicioId}")
-    public ResponseEntity<Void> deleteServicio(@PathVariable("servicioId") int servicioId) {
-    	Business business = getCurrentBusiness();
-
-        int deleteStatus = servicioService.deleteServicio(servicioId);
-        if (deleteStatus == 1) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<Void> deleteServicio(@PathVariable("servicioId") int servicioId, HttpServletRequest request) {
+    	Claims claims = getToken(request);
+        int alumnoId = (Integer) claims.get("userId");
+        System.out.println(alumnoId);
+        Business loggedBusiness = businessService.getBusinessByStudentId(alumnoId);
+        if(loggedBusiness.getId() == servicioService.getServicioById(servicioId).getBusinessId().getId()) {
+	        int deleteStatus = servicioService.deleteServicio(servicioId);
+	        if (deleteStatus == 1) {
+	            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	        } else {
+	            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	        }
+    	}
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     // Recuperar los servicios de una empresa filtrando por familia profesional
