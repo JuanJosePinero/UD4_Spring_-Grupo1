@@ -7,11 +7,10 @@ import com.example.demo.model.UserModel;
 
 public interface UserService {
 
-
 	User findUsuario(String username, String pwd);
-	
+
 	Student login(String username, String pwd);
 
 	Student register(StudentModel studentModel);
-	
+
 }

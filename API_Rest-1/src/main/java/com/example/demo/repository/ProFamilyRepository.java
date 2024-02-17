@@ -10,8 +10,10 @@ import com.example.demo.entity.ProFamily;
 
 @Repository("proFamilyRepository")
 public interface ProFamilyRepository extends JpaRepository<ProFamily, Serializable> {
-    ProFamily findByName(String name);
-    ProFamily findById(int proFamilyId);
-    List<ProFamily> findAll();
-}
+	
+	ProFamily findByName(String name);
 
+	ProFamily findById(int proFamilyId);
+
+	List<ProFamily> findAll();
+}

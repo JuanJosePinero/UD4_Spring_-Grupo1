@@ -14,18 +14,29 @@ import com.example.demo.entity.Servicio;
 import com.example.demo.entity.Student;
 
 @Repository("servicioRepository")
-public interface ServicioRepository  extends JpaRepository<Servicio, Serializable>{
-	
+public interface ServicioRepository extends JpaRepository<Servicio, Serializable> {
+
 	public abstract Servicio findByTitle(String title);
+
 	Servicio findById(int id);
+
 	List<Servicio> findByFinished(int finished);
-	List<Servicio>findByProfesionalFamilyId(ProFamily proFamilyId);
+
+	List<Servicio> findByProfesionalFamilyId(ProFamily proFamilyId);
+
 	Servicio findUniqueByBusinessId(Business businessId);
+
 	public abstract List<Servicio> findByStudentIdIsNull();
+
 	public abstract List<Servicio> findByStudentIdIsNotNullAndFinishedIsNot(int i);
+
 	public abstract List<Servicio> findByBusinessId(Business businessId);
+
 	List<Servicio> findByFinishedAndStudentId(int finished, Student studentId);
-	public abstract List<Servicio> findByValorationIsNotNullAndBusinessIdAndProfesionalFamilyId(Business businessId, ProFamily proFamilyId);
-	public abstract List<Servicio>findByHappeningDateBetween(Date registerDateBegin,Date registerDateEnd);
-	List<Servicio> findByBusinessIdAndProfesionalFamilyId(Business businessId,ProFamily proFamily);
+
+	public abstract List<Servicio> findByValorationIsNotNullAndBusinessIdAndProfesionalFamilyId(Business businessId,ProFamily proFamilyId);
+
+	public abstract List<Servicio> findByHappeningDateBetween(Date registerDateBegin, Date registerDateEnd);
+
+	List<Servicio> findByBusinessIdAndProfesionalFamilyId(Business businessId, ProFamily proFamily);
 }

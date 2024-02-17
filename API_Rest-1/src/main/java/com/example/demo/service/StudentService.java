@@ -14,11 +14,13 @@ public interface StudentService {
 	List<Student> listAllStudents();
 
 	Student getStudentById(int id);
-	
+
 	Student getStudentByName(String name);
 
 	public List<ServicioDTO> getServiceByStudentProfesionalFamily(int id);
+
 	public List<ServicioDTO> getUnassignedServiceByStudentProfesionalFamily(int id);
+
 	public List<ServicioDTO> getAssignedServiceByStudentProfesionalFamily(int id);
-	
+
 }

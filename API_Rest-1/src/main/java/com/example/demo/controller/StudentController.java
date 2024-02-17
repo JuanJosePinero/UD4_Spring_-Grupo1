@@ -42,17 +42,12 @@ public class StudentController {
 	private final String HEADER = "Authorization";
     private final String PREFIX = "Bearer ";
     private final String SECRET = "mySecretKey";
-//	@GetMapping("/viewServices")
-//	public ResponseEntity<List<ServicioModel>> viewServices(@RequestParam("studentId") int studentId) {
-//
-//		List<ServicioModel> serviceList = studentService.getServiceByStudentProfesionalFamily(studentId);
-//		return new ResponseEntity<>(serviceList, HttpStatus.OK);
-//	}
+
 	
 	@GetMapping("/viewServices")
 	public ResponseEntity<List<ServicioDTO>> viewServices(HttpServletRequest request) {
-		Claims claims = getToken(request);
-        int alumnoId = (Integer) claims.get("userId");
+		
+        int alumnoId = getUserIdFromToken(request);
         try {
 	        List<ServicioDTO> serviceList = studentService.getServiceByStudentProfesionalFamily(alumnoId);
 	      
@@ -64,8 +59,8 @@ public class StudentController {
 
 	@GetMapping("/viewServicesAssigned")
     public ResponseEntity<List<ServicioDTO>> viewAssignedServices(HttpServletRequest request) {
-		Claims claims = getToken(request);
-        int alumnoId = (Integer) claims.get("userId");
+		
+		int alumnoId = getUserIdFromToken(request);
 		
         List<ServicioDTO> serviceList = studentService.getAssignedServiceByStudentProfesionalFamily(alumnoId);
         return new ResponseEntity<>(serviceList, HttpStatus.OK);
@@ -73,10 +68,14 @@ public class StudentController {
     
     @GetMapping("/viewServicesUnassigned")
     public ResponseEntity<List<ServicioDTO>> viewUnassignedServices(HttpServletRequest request) {
-    	Claims claims = getToken(request);
-        int alumnoId = (Integer) claims.get("userId");
+    	int alumnoId = getUserIdFromToken(request);
         List<ServicioDTO> serviceList = studentService.getUnassignedServiceByStudentProfesionalFamily(alumnoId);
         return new ResponseEntity<>(serviceList, HttpStatus.OK);
+    }
+    
+    private int getUserIdFromToken(HttpServletRequest request) {
+        Claims claims = getToken(request);
+        return (Integer) claims.get("userId");
     }
     
     

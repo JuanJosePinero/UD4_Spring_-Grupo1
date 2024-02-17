@@ -8,10 +8,10 @@ import org.springframework.stereotype.Repository;
 import com.example.demo.entity.Business;
 
 @Repository("businessRepository")
-public interface BusinessRepository extends JpaRepository<Business, Serializable>{
-	
+public interface BusinessRepository extends JpaRepository<Business, Serializable> {
+
 	public abstract Business findByName(String name);
+
 	public abstract Business findByEmail(String email);
-	
 
 }

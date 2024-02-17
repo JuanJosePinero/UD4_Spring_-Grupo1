@@ -12,7 +12,6 @@ public class Business extends User{
 
 	
 	
-//	@Column(unique=true, nullable=false)
 	private String name, address,phone, logo;
 	
 	@OneToMany(mappedBy="businessId")

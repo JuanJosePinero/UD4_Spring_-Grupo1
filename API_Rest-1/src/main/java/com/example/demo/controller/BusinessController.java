@@ -42,173 +42,144 @@ public class BusinessController {
 
 	@Autowired
 	@Qualifier("servicioService")
-	 private ServicioService servicioService;
+	private ServicioService servicioService;
 
 	@Autowired
 	@Qualifier("studentService")
-    private StudentService studentService;
-	
+	private StudentService studentService;
+
 	@Autowired
 	@Qualifier("businessService")
-    private BusinessService businessService;
-	
+	private BusinessService businessService;
+
 	@Autowired
 	@Qualifier("proFamilyService")
-	 private ProFamilyService proFamilyService;
-	
+	private ProFamilyService proFamilyService;
+
 	private final String HEADER = "Authorization";
-    private final String PREFIX = "Bearer ";
-    private final String SECRET = "mySecretKey";
+	private final String PREFIX = "Bearer ";
+	private final String SECRET = "mySecretKey";
 
-	
 	// Crear un nuevo servicio por parte de la empresa logueada
-    @PostMapping("/newServicio")
-    public ResponseEntity<?> createServicio(@RequestBody ServicioModel servicioModel, HttpServletRequest request) {
-        Claims claims = getToken(request);
-        int alumnoId = (Integer) claims.get("userId");
+	@PostMapping("/newServicio")
+	public ResponseEntity<?> createServicio(@RequestBody ServicioModel servicioModel, HttpServletRequest request) {
+		Business loggedBusiness = getCurrentBusiness(request);
 
-        Business loggedBusiness = businessService.getBusinessByStudentId(alumnoId);
+		servicioModel.setBusinessId(loggedBusiness);
 
-        servicioModel.setBusinessId(loggedBusiness);
+		Servicio existingServicio = servicioService.getOneServiceByBusinessId(loggedBusiness, servicioModel.getTitle(),
+				servicioModel.getDescription());
+		if (existingServicio != null) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+					.body("A service with the same title and description already exists for this company.");
+		}
+		ServicioDTO newServicio = servicioService.addServicio(servicioModel);
 
-        // Verificar si el servicio ya existe para esta empresa y tiene el mismo título y descripción
-        Servicio existingServicio = servicioService.getOneServiceByBusinessId(loggedBusiness, servicioModel.getTitle(), servicioModel.getDescription());
-        if (existingServicio != null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                                 .body("A service with the same title and description already exists for this company.");
-        }
+		return new ResponseEntity<>(newServicio, HttpStatus.CREATED);
+	}
 
-        // Crear el nuevo servicio
-        ServicioDTO newServicio = servicioService.addServicio(servicioModel);
-        
-        return new ResponseEntity<>(newServicio, HttpStatus.CREATED);
-    }
-
-
-
-
-    // Recuperar un determinado servicio de la empresa logueada
-    @GetMapping("/servicios/{servicioId}")
-    public ResponseEntity<ServicioDTO> getServicioById(@PathVariable("servicioId") int servicioId, HttpServletRequest request) {
-    	 Claims claims = getToken(request);
-         int alumnoId = (Integer) claims.get("userId");
-         Business loggedBusiness = businessService.getBusinessByStudentId(alumnoId);
-         try {
-             List<ServicioDTO> servicios = servicioService.getServicesByBusinessId(loggedBusiness);
-             if (servicios.isEmpty()) {
-                 return null;
-             }
-             for (ServicioDTO s : servicios) {
-				if(s.getId() == servicioId) {
+	// Recuperar un determinado servicio de la empresa logueada
+	@GetMapping("/servicios/{servicioId}")
+	public ResponseEntity<ServicioDTO> getServicioById(@PathVariable("servicioId") int servicioId,
+			HttpServletRequest request) {
+		Business loggedBusiness = getCurrentBusiness(request);
+		try {
+			List<ServicioDTO> servicios = servicioService.getServicesByBusinessId(loggedBusiness);
+			if (servicios.isEmpty()) {
+				return null;
+			}
+			for (ServicioDTO s : servicios) {
+				if (s.getId() == servicioId) {
 					return ResponseEntity.ok(s);
 				}
-             }
-             
-         } catch (EntityNotFoundException e) {
-     		return null;
-         }
- 		return null;
-
-     }
-    
-    // Recuperar todos los servicios de la empresa logueada    
-    @GetMapping("/servicios")
-    public ResponseEntity<?> getAllServicios(HttpServletRequest request) {
-        Claims claims = getToken(request);
-        int alumnoId = (Integer) claims.get("userId");
-        Business loggedBusiness = businessService.getBusinessByStudentId(alumnoId);
-        try {
-            List<ServicioDTO> servicioDTO = servicioService.getServicesByBusinessId(loggedBusiness);
-            if (servicioDTO.isEmpty()) {
-                return null;
-            }
-            return ResponseEntity.ok(servicioDTO);
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Alumno no encontrado con ID: " + alumnoId);
-        }
-    }
-    
- // Recuperar todos los servicios de la empresa logueada filtrando por familia profesional
-    @GetMapping("/servicios/proFam/{proFamilyId}")
-    public ResponseEntity<?> getServiciosByProFamily(HttpServletRequest request, @PathVariable("proFamilyId") int proFamilyId) {
-        Claims claims = getToken(request);
-        int alumnoId = (Integer) claims.get("userId");
-        Business loggedBusiness = businessService.getBusinessByStudentId(alumnoId);
-        try {
-            List<ServicioDTO> serviciosDTO = servicioService.getServicesByBusinessId(loggedBusiness);
-            if (serviciosDTO.isEmpty()) {
-                return null;
-            }
-            List<ServicioDTO> servicioDTO = new ArrayList<>();
-            for (ServicioDTO s : serviciosDTO) {
-            	if(s.getProfesionalFamilyId().getId() == proFamilyId)
-            		servicioDTO.add(s);
-            		
 			}
-            return ResponseEntity.ok(servicioDTO);
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Alumno no encontrado con ID: " + alumnoId);
-        }
-    }
-    
-    // Actualizar un servicio de la empresa logueada
-    @PutMapping("/servicios/{servicioId}")
-    public ResponseEntity<ServicioDTO> updateServicio(@PathVariable("servicioId") int servicioId,
-                                                         @RequestBody ServicioModel servicio, HttpServletRequest request) {
-    	Claims claims = getToken(request);
-        int alumnoId = (Integer) claims.get("userId");
-        System.out.println(alumnoId);
-        Business loggedBusiness = businessService.getBusinessByStudentId(alumnoId);
-        
-        
-        if(loggedBusiness.getId() == servicioService.getServicioById(servicioId).getBusinessId().getId()) {
-        	//Aunque el usuario meta un id distinto en el modelo, no cambiará gracias a esto. Control de errores 
-        	servicio.setId(servicioId);
-            Servicio updatedServicio = servicioService.updateServicio(servicio);
-            ServicioConverter serviceConverter = new ServicioConverter();	
-            ServicioDTO serviceDTO = serviceConverter.transform(updatedServicio);
-            return new ResponseEntity<>(serviceDTO, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
 
-    // Eliminar un servicio de la empresa logueada
-    @DeleteMapping("/servicios/{servicioId}")
-    public ResponseEntity<Void> deleteServicio(@PathVariable("servicioId") int servicioId, HttpServletRequest request) {
-    	Claims claims = getToken(request);
-        int alumnoId = (Integer) claims.get("userId");
-        Business loggedBusiness = businessService.getBusinessByStudentId(alumnoId);
-        if(loggedBusiness.getId() == servicioService.getServicioById(servicioId).getBusinessId().getId()) {
-	        int deleteStatus = servicioService.deleteServicio(servicioId);
-	        if (deleteStatus == 1) {
-	            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-	        } else {
-	            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-	        }
-    	}
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-    
-    private Business getCurrentBusiness() {
-    	/*
-    	 * ELIMINAR EL CONTENIDO DE ESTE METODO Y METER LAS 4 LINEAS DEL TOKEN AQUI PARA GENERALIZAR
-    	 */
-    	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    	Object principal = authentication.getPrincipal();
-    	UserDetails userDetails = null;
-    	if (principal instanceof UserDetails) {
-    	    userDetails = (UserDetails) principal;
-    	} else {
-    		return null;
-    	}
-        
-        String username = ((UserDetails) userDetails).getUsername();
-        return businessService.getIdByUsername(username);
-    }
+		} catch (EntityNotFoundException e) {
+			return null;
+		}
+		return null;
 
-    private Claims getToken(HttpServletRequest request) {
-        String jwtToken = request.getHeader(HEADER).replace(PREFIX, "");
-        return Jwts.parser().setSigningKey(SECRET.getBytes()).parseClaimsJws(jwtToken).getBody();
-    }
+	}
+
+	// Recuperar todos los servicios de la empresa logueada
+	@GetMapping("/servicios")
+	public ResponseEntity<?> getAllServicios(HttpServletRequest request) {
+		Business loggedBusiness = getCurrentBusiness(request);
+		try {
+			List<ServicioDTO> servicioDTO = servicioService.getServicesByBusinessId(loggedBusiness);
+			if (servicioDTO.isEmpty()) {
+				return null;
+			}
+			return ResponseEntity.ok(servicioDTO);
+		} catch (EntityNotFoundException e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Student not found");
+		}
+	}
+
+	// Recuperar todos los servicios de la empresa logueada filtrando por familia profesional
+	@GetMapping("/servicios/proFam/{proFamilyId}")
+	public ResponseEntity<?> getServiciosByProFamily(HttpServletRequest request,
+			@PathVariable("proFamilyId") int proFamilyId) {
+		Business loggedBusiness = getCurrentBusiness(request);
+		try {
+			List<ServicioDTO> serviciosDTO = servicioService.getServicesByBusinessId(loggedBusiness);
+			if (serviciosDTO.isEmpty()) {
+				return null;
+			}
+			List<ServicioDTO> servicioDTO = new ArrayList<>();
+			for (ServicioDTO s : serviciosDTO) {
+				if (s.getProfesionalFamilyId().getId() == proFamilyId)
+					servicioDTO.add(s);
+
+			}
+			return ResponseEntity.ok(servicioDTO);
+		} catch (EntityNotFoundException e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Student not found");
+		}
+	}
+
+	// Actualizar un servicio de la empresa logueada
+	@PutMapping("/servicios/{servicioId}")
+	public ResponseEntity<ServicioDTO> updateServicio(@PathVariable("servicioId") int servicioId,
+			@RequestBody ServicioModel servicio, HttpServletRequest request) {
+		Business loggedBusiness = getCurrentBusiness(request);
+
+		if (loggedBusiness.getId() == servicioService.getServicioById(servicioId).getBusinessId().getId()) {
+			// Aunque el usuario meta un id distinto en el modelo, no cambiara gracias a esto. Control de errores :)
+			servicio.setId(servicioId);
+			Servicio updatedServicio = servicioService.updateServicio(servicio);
+			ServicioConverter serviceConverter = new ServicioConverter();
+			ServicioDTO serviceDTO = serviceConverter.transform(updatedServicio);
+			return new ResponseEntity<>(serviceDTO, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+	}
+
+	// Eliminar un servicio de la empresa logueada
+	@DeleteMapping("/servicios/{servicioId}")
+	public ResponseEntity<Void> deleteServicio(@PathVariable("servicioId") int servicioId, HttpServletRequest request) {
+		Business loggedBusiness = getCurrentBusiness(request);
+
+		if (loggedBusiness.getId() == servicioService.getServicioById(servicioId).getBusinessId().getId()) {
+			int deleteStatus = servicioService.deleteServicio(servicioId);
+			if (deleteStatus == 1) {
+				return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+			} else {
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			}
+		}
+		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	}
+
+	private Business getCurrentBusiness(HttpServletRequest request) {
+		Claims claims = getToken(request);
+		int alumnoId = (Integer) claims.get("userId");
+		return businessService.getBusinessByStudentId(alumnoId);
+	}
+
+	private Claims getToken(HttpServletRequest request) {
+		String jwtToken = request.getHeader(HEADER).replace(PREFIX, "");
+		return Jwts.parser().setSigningKey(SECRET.getBytes()).parseClaimsJws(jwtToken).getBody();
+	}
 }
