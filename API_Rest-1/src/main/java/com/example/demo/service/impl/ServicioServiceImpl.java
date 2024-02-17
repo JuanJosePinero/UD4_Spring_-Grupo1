@@ -3,6 +3,7 @@ package com.example.demo.service.impl;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
@@ -72,12 +73,12 @@ public class ServicioServiceImpl implements ServicioService {
 	}
 	
 	@Override
-	public ServicioModel addServicio(ServicioModel servicioModel) {
+	public ServicioDTO addServicio(ServicioModel servicioModel) {
 	    Servicio servicio = model2entity(servicioModel);
 	    servicio.setTitle(servicioModel.getTitle());
 	    servicio.setDescription(servicioModel.getDescription());
-	    servicio.setHappeningDate(servicioModel.getHappeningDate());
-	    servicio.setRegisterDate(servicioModel.getRegisterDate());
+	    servicio.setHappeningDate(null);
+	    servicio.setRegisterDate(new Date());
 	    servicio.setId(servicioModel.getId());
 	    servicio.setBusinessId(servicioModel.getBusinessId());
 	    servicio.setProfesionalFamilyId(servicioModel.getProfesionalFamilyId());
@@ -89,7 +90,7 @@ public class ServicioServiceImpl implements ServicioService {
 	    
 	    servicio = servicioRepository.save(servicio);
 
-	    ServicioModel createdServicio = entity2model(servicio);
+	    ServicioDTO createdServicio = servicioConverter.transform(servicio);
 
 	    return createdServicio;    
 	}
@@ -206,4 +207,21 @@ public class ServicioServiceImpl implements ServicioService {
 		List<Servicio> servicios = servicioRepository.findByBusinessIdAndProfesionalFamilyId(business, profam);
 		return servicioConverter.transform2DTO(servicios);
 	}
+
+	@Override
+	public Servicio getOneServiceByBusinessId(Business business, String title, String description) {
+	    List<Servicio> existingServicios = servicioRepository.findByBusinessId(business);
+	    if (existingServicios != null && !existingServicios.isEmpty()) {
+	        for (Servicio existingServicio : existingServicios) {
+	            if (existingServicio.getTitle().equals(title) && 
+	                existingServicio.getDescription().equals(description)) {
+	                // Si hay coincidencia, devolver el servicio existente
+	                return existingServicio;
+	            }
+	        }
+	    }
+	    // Si no se encuentra ningún servicio que coincida, devolver null
+	    return null;
+	}
+
 }

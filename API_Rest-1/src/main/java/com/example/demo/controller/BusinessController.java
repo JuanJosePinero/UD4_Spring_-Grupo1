@@ -62,26 +62,36 @@ public class BusinessController {
 
 	
 	// Crear un nuevo servicio por parte de la empresa logueada
-    @PostMapping("/servicios")
-    public ResponseEntity<ServicioModel> createServicio(@RequestBody ServicioModel servicioModel) {
-        Business business = getCurrentBusiness();
+    @PostMapping("/newServicio")
+    public ResponseEntity<?> createServicio(@RequestBody ServicioModel servicioModel, HttpServletRequest request) {
+        Claims claims = getToken(request);
+        int alumnoId = (Integer) claims.get("userId");
+
+        Business loggedBusiness = businessService.getBusinessByStudentId(alumnoId);
+
+        servicioModel.setBusinessId(loggedBusiness);
+
+        // Verificar si el servicio ya existe para esta empresa y tiene el mismo título y descripción
+        Servicio existingServicio = servicioService.getOneServiceByBusinessId(loggedBusiness, servicioModel.getTitle(), servicioModel.getDescription());
+        if (existingServicio != null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                                 .body("A service with the same title and description already exists for this company.");
+        }
+
+        // Crear el nuevo servicio
+        ServicioDTO newServicio = servicioService.addServicio(servicioModel);
         
-        // Buscar ProFamily por ID
-        ProFamily proFamily = proFamilyService.findById(servicioModel.getProfesionalFamilyId().getId());
-
-        servicioModel.setBusinessId(business);
-        servicioModel.setProfesionalFamilyId(proFamily);
-        ServicioModel createdServicio = servicioService.addServicio(servicioModel);
-
-        return new ResponseEntity<>(createdServicio, HttpStatus.CREATED);
+        return new ResponseEntity<>(newServicio, HttpStatus.CREATED);
     }
+
+
+
 
     // Recuperar un determinado servicio de la empresa logueada
     @GetMapping("/servicios/{servicioId}")
     public ResponseEntity<ServicioDTO> getServicioById(@PathVariable("servicioId") int servicioId, HttpServletRequest request) {
     	 Claims claims = getToken(request);
          int alumnoId = (Integer) claims.get("userId");
-         System.out.println(alumnoId);
          Business loggedBusiness = businessService.getBusinessByStudentId(alumnoId);
          try {
              List<ServicioDTO> servicios = servicioService.getServicesByBusinessId(loggedBusiness);
@@ -168,7 +178,6 @@ public class BusinessController {
     public ResponseEntity<Void> deleteServicio(@PathVariable("servicioId") int servicioId, HttpServletRequest request) {
     	Claims claims = getToken(request);
         int alumnoId = (Integer) claims.get("userId");
-        System.out.println(alumnoId);
         Business loggedBusiness = businessService.getBusinessByStudentId(alumnoId);
         if(loggedBusiness.getId() == servicioService.getServicioById(servicioId).getBusinessId().getId()) {
 	        int deleteStatus = servicioService.deleteServicio(servicioId);
@@ -180,28 +189,17 @@ public class BusinessController {
     	}
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
-
-    // Recuperar los servicios de una empresa filtrando por familia profesional
-    @GetMapping("/servicios/filtrar")
-    public ResponseEntity<List<ServicioModel>> filterServiciosByProFamily(@RequestParam("familiaProfesional") String familiaProfesional) {
-    	Business business = getCurrentBusiness();
-
-        List<ServicioModel> servicios = servicioService.findServiciosByProFamily(familiaProfesional);
-        // Filtrar solo los servicios de la empresa logueada
-        servicios.removeIf(servicio -> servicio.getBusinessId().getId() != business.getId());
-
-        return new ResponseEntity<>(servicios, HttpStatus.OK);
-    }
     
     private Business getCurrentBusiness() {
+    	/*
+    	 * ELIMINAR EL CONTENIDO DE ESTE METODO Y METER LAS 4 LINEAS DEL TOKEN AQUI PARA GENERALIZAR
+    	 */
     	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     	Object principal = authentication.getPrincipal();
     	UserDetails userDetails = null;
     	if (principal instanceof UserDetails) {
     	    userDetails = (UserDetails) principal;
-    	    // Utiliza userDetails aquí
     	} else {
-    		System.out.println("Hola");
     		return null;
     	}
         
