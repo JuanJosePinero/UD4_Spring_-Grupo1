@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.example.demo.dto.ServicioDTO;
+import com.example.demo.dto.StudentDTO;
 import com.example.demo.entity.ProFamily;
 import com.example.demo.entity.Student;
 import com.example.demo.model.ServicioModel;
@@ -22,5 +23,7 @@ public interface StudentService {
 	public List<ServicioDTO> getUnassignedServiceByStudentProfesionalFamily(int id);
 
 	public List<ServicioDTO> getAssignedServiceByStudentProfesionalFamily(int id);
+	
+	public List<StudentDTO>getAllStudentByEmail(String email);
 
 }

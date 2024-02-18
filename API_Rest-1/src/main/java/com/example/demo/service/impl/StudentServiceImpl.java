@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import com.example.demo.converter.ServicioConverter;
 import com.example.demo.converter.StudentConverter;
 import com.example.demo.dto.ServicioDTO;
+import com.example.demo.dto.StudentDTO;
 import com.example.demo.entity.Servicio;
 import com.example.demo.entity.Student;
 import com.example.demo.model.StudentModel;
@@ -125,6 +126,16 @@ public class StudentServiceImpl implements StudentService, UserDetailsService {
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public List<StudentDTO> getAllStudentByEmail(String email) {
+		List<Student> student = studentRepository.findStudentByEmail(email);
+		if (!student.isEmpty()) {
+			return null;
+		} else {
+			return studentConverter.transform(student);
+		}
 	}
 
 }

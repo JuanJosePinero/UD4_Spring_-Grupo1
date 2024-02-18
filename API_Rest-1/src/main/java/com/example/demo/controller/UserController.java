@@ -17,8 +17,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.AuthenticationResponseDTO;
+import com.example.demo.dto.StudentDTO;
 import com.example.demo.entity.Student;
 import com.example.demo.entity.User;
+import com.example.demo.service.StudentService;
 import com.example.demo.service.UserService;
 
 import io.jsonwebtoken.Jwts;
@@ -31,6 +33,10 @@ public class UserController {
 	@Autowired
 	@Qualifier("userService")
 	private UserService userService;
+	
+	@Autowired
+	@Qualifier("studentService")
+	private StudentService studentService;
 
 	@PostMapping("/login")
     public ResponseEntity<?> login(@RequestParam("email") String email, @RequestParam("password") String pwd) {
@@ -46,7 +52,7 @@ public class UserController {
 	        return ResponseEntity.ok(response);
 	        
 	    }
-	    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciales inválidas");
+	    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
 	    
 	    
 	}
@@ -54,9 +60,16 @@ public class UserController {
 	
 	
 	@PostMapping("/register")
-	public com.example.demo.entity.Student saveStudent(@RequestBody com.example.demo.model.StudentModel studentModel){
-		return userService.register(studentModel);
-	}
+	public ResponseEntity<?> saveStudent(@RequestBody com.example.demo.model.StudentModel studentModel){
+		List<StudentDTO> existingStudents = studentService.getAllStudentByEmail(studentModel.getEmail());
+        if (existingStudents == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This email is already registered");
+        }
+        
+        Student newStudent = userService.register(studentModel);
+        return ResponseEntity.ok(newStudent);
+    }
+	
 	
 	private String getJWTToken(Student usuario) {
 		String secretKey = "mySecretKey";

@@ -21,5 +21,7 @@ public interface StudentRepository extends JpaRepository<Student, Serializable> 
 	Student findByName(String name);
 
 	List<Student> findByProfesionalFamily(ProFamily proFamily);
+	
+	List<Student>findStudentByEmail(String email);
 
 }
