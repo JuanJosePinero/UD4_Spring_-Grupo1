@@ -57,6 +57,7 @@ public class UserServiceImpl implements UserService {
 	        student.setSurname(studentModel.getSurname());
 	        student.setEmail(studentModel.getEmail());
 	        student.setPassword(passwordEncoder().encode(studentModel.getPassword()));
+	        student.setProfesionalFamily(studentModel.getProfesionalFamily());
 	        student.setEnabled(1);
 	        student.setDeleted(0);
 	        student.setRole("ROLE_STUDENT");
