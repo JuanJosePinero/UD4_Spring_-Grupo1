@@ -177,6 +177,14 @@ public class BusinessController {
 		int alumnoId = (Integer) claims.get("userId");
 		return businessService.getBusinessByStudentId(alumnoId);
 	}
+	
+	@GetMapping("/getLoggedBusiness")
+	public ResponseEntity<?> getLoggedBusiness(HttpServletRequest request) {
+		Claims claims = getToken(request);
+		int alumnoId = (Integer) claims.get("userId");
+	    Business empresa = businessService.getBusinessByStudentId(alumnoId);
+	    return ResponseEntity.ok(empresa);
+	}
 
 	private Claims getToken(HttpServletRequest request) {
 		String jwtToken = request.getHeader(HEADER).replace(PREFIX, "");
