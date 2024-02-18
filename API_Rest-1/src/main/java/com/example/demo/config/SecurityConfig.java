@@ -25,7 +25,7 @@ public class SecurityConfig {
                 .sessionManagement(management -> management
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeRequests(requests -> requests
-                        .requestMatchers("/api/login", "/error" , "/api/register").permitAll()
+                        .requestMatchers("/api/login", "/error" , "/api/register" , "/proFamily/all").permitAll()
                         .requestMatchers("/student/**").hasAuthority("ROLE_STUDENT")
                         .requestMatchers("/business/**").hasAuthority("ROLE_BUSINESS")
                         .anyRequest().authenticated())
