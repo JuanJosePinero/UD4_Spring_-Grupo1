@@ -14,7 +14,7 @@ import lombok.Setter;
 @Data
 public class StudentModel extends UserModel {
 
-	private String name, surname, password, role;
+	private String name, surname, password, role, username;
 	private int enabled;
 	private int deleted;
 	private ProFamily profesionalFamily;

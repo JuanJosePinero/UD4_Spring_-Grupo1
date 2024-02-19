@@ -126,7 +126,6 @@ public class ServicioServiceImpl implements ServicioService {
 				servicio.setComment(servicioModel.getComment());
 			}
 
-			// Considera -1 como un valor que indica que el campo no debe actualizarse
 			if (servicioModel.getValoration() != -1 || servicioModel.getValoration() > 10
 					|| servicioModel.getValoration() < 0) {
 				servicio.setValoration(servicioModel.getValoration());
@@ -176,7 +175,7 @@ public class ServicioServiceImpl implements ServicioService {
 		List<Servicio> servicios = servicioRepository.findAll();
 		List<ServicioDTO> servicesDTO = new ArrayList<>();
 		for (Servicio servicio : servicios) {
-			if (servicio.getBusinessId() != null && servicio.getBusinessId().getId() == business.getId()) {
+			if (servicio.getBusinessId() != null && servicio.getBusinessId().getId() == business.getId() && servicio.getDeleted() == 0) {
 				servicesDTO.add(converter.transform(servicio));
 			}
 		}

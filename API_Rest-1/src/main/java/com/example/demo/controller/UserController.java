@@ -48,6 +48,10 @@ public class UserController {
 	                student.getEmail(),
 	                student.getRole(),
 	                token);
+	        
+	        if(student.getEnabled() == 0 || student.getDeleted() == 1) {
+	        	return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not enabled or has been deleted");
+	        }
 
 	        return ResponseEntity.ok(response);
 	        
@@ -65,6 +69,12 @@ public class UserController {
         if (existingStudents == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This email is already registered");
         }
+        if(studentModel.getUsername().isEmpty() || studentModel.getUsername().length() > 30 ||
+           studentModel.getName().isEmpty() || studentModel.getName().length() > 20 ||
+           studentModel.getSurname().isEmpty() || studentModel.getSurname().length() > 40 ||
+           studentModel.getEmail().isEmpty() || studentModel.getEmail().length() > 40 ||
+           studentModel.getPassword().isEmpty() || studentModel.getPassword().length() > 20 )
+        	return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Couldn't register. Credentials might be wrong.");
         
         Student newStudent = userService.register(studentModel);
         return ResponseEntity.ok(newStudent);

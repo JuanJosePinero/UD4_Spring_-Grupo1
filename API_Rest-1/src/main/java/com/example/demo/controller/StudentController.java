@@ -59,10 +59,10 @@ public class StudentController {
 
 	@GetMapping("/viewServicesAssigned")
     public ResponseEntity<List<ServicioDTO>> viewAssignedServices(HttpServletRequest request) {
-		
 		int alumnoId = getUserIdFromToken(request);
-		
         List<ServicioDTO> serviceList = studentService.getAssignedServiceByStudentProfesionalFamily(alumnoId);
+        if(serviceList.isEmpty())
+        	return null;
         return new ResponseEntity<>(serviceList, HttpStatus.OK);
     }
     
@@ -70,6 +70,8 @@ public class StudentController {
     public ResponseEntity<List<ServicioDTO>> viewUnassignedServices(HttpServletRequest request) {
     	int alumnoId = getUserIdFromToken(request);
         List<ServicioDTO> serviceList = studentService.getUnassignedServiceByStudentProfesionalFamily(alumnoId);
+        if(serviceList.isEmpty())
+        	return null;
         return new ResponseEntity<>(serviceList, HttpStatus.OK);
     }
     
