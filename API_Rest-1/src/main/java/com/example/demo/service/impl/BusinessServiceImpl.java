@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.converter.BusinessConverter;
+import com.example.demo.dto.BusinessDTO;
 import com.example.demo.entity.Business;
 import com.example.demo.entity.Student;
 import com.example.demo.model.BusinessModel;
@@ -75,11 +77,19 @@ public class BusinessServiceImpl implements BusinessService {
 		}
 		return null;
 	}
+	
+	@Override
+	public BusinessDTO getBusinessDTOByStudentId(int id) {
+		Student student = studentRepository.findById(id);
+		String email = student.getEmail();
+		Business business = getBusinessByEmail(email);
+		BusinessConverter bc = new BusinessConverter();
+		return bc.transform(business);
+	}
 
 	@Override
-	public Business getBusinessByEmail(String email) {
-		// TODO Auto-generated method stub
-		return null;
+	public Business getBusinessByEmail(String email) {	
+		return businessRepository.findByEmail(email);
 	}	
 
 }

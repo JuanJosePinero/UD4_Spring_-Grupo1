@@ -1,16 +1,10 @@
 package com.example.demo.service;
 
 import java.util.List;
-import java.util.Map;
 
-import org.springframework.web.multipart.MultipartFile;
-
+import com.example.demo.dto.BusinessDTO;
 import com.example.demo.entity.Business;
-import com.example.demo.entity.ProFamily;
-import com.example.demo.entity.Student;
 import com.example.demo.model.BusinessModel;
-import com.example.demo.model.ProFamilyModel;
-import com.example.demo.model.StudentModel;
 
 
 public interface BusinessService {
@@ -25,8 +19,10 @@ public interface BusinessService {
 	
 	public Business getIdByUsername(String username);
 	
+	public BusinessDTO getBusinessDTOByStudentId(int id);
+
 	public Business getBusinessByStudentId(int id);
-	
+
 	public Business getBusinessByEmail(String email);
 	
 }

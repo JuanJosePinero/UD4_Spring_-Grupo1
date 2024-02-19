@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,9 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.entity.ProFamily;
 import com.example.demo.service.ProFamilyService;
-
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/proFamily")
@@ -29,11 +27,15 @@ public class ProFamilyController {
     @GetMapping("/all")
     public ResponseEntity<?> getAllProFam() {
         List<ProFamily> proFamilies = proFamilyService.getAll();
+        List<ProFamily> pf = new ArrayList<>();
         if (proFamilies.isEmpty()) {
         	return new ResponseEntity<>(proFamilies, HttpStatus.NO_CONTENT);
         }
-        System.out.println("Familias profesionales: "+proFamilies);
-        return ResponseEntity.ok(proFamilies);
+        for (ProFamily proFamily : proFamilies) {
+        	if(proFamily.getDeleted() == 0)
+        		pf.add(proFamily);
+		}
+        return ResponseEntity.ok(pf);
     }
 
 }

@@ -110,6 +110,14 @@ public class ServicioModel {
 	public void setDeleted(int deleted) {
 		this.deleted = deleted;
 	}
+	
+	public ServicioModel(int id, String title, String description,  ProFamily profesionalFamilyId) {
+		super();
+		this.id = id;
+		this.title = title;
+		this.description = description;
+		this.profesionalFamilyId = profesionalFamilyId;
+	}
 	public ServicioModel(int id, String title, String description, Date registerDate, Date happeningDate, Student studentId,
 			Business businessId, ProFamily profesionalFamilyId, float valoration, int finished, String comment, int deleted) {
 		super();
