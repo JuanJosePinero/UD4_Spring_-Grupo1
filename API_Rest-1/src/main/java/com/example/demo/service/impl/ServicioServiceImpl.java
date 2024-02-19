@@ -131,6 +131,10 @@ public class ServicioServiceImpl implements ServicioService {
 					|| servicioModel.getValoration() < 0) {
 				servicio.setValoration(servicioModel.getValoration());
 			}
+			
+			if(servicioModel.getProfesionalFamilyId().getId() != -1) {
+				servicio.setProfesionalFamilyId(servicioModel.getProfesionalFamilyId());
+			}
 
 			servicio = servicioRepository.save(servicio);
 		}
