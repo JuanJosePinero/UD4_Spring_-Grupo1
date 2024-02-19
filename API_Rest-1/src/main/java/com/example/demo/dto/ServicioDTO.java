@@ -1,5 +1,7 @@
 package com.example.demo.dto;
 
+import java.sql.Date;
+
 import com.example.demo.entity.ProFamily;
 import com.example.demo.entity.Student;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -16,6 +18,7 @@ public class ServicioDTO {
 	private String title;
 	private String description;
 	private int finished;
+	private Date registerDate;
 	private String comment;
 	@JsonIgnore
     private ProFamily profesionalFamilyId;
